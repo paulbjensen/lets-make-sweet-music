@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
   import logo from './assets/logo.png'
   import Keyboard from './Keyboard.svelte';
 
@@ -26,14 +27,40 @@
     { id: 8,  shortcut: 'k', src: soundEight },
   ];
 
-  function playSound (shortcut:string) {
-    const sound = soundBox.find(sound => sound.shortcut === shortcut);
-    if (sound) {
-      // I wonder if this is the most efficient way to play the sound - perhaps there is something more efficient
-      const audio = new Audio(sound.src);
-      audio.play()
+  let audioContext = new AudioContext();
+  let soundBuffers: Record<string, AudioBuffer> = {};
+
+  const keyToFile: Record<string, string> = {
+    a: soundOne,
+    s: soundTwo,
+    d: soundThree,
+    f: soundFour,
+    g: soundFive,
+    h: soundSix,
+    j: soundSeven,
+    k: soundEight,
+  };
+
+  async function loadSounds() {
+    const entries = Object.entries(keyToFile);
+    await Promise.all(entries.map(async ([key, src]) => {
+      const response = await fetch(src);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      soundBuffers[key] = audioBuffer;
+    }));
+  }
+
+  function playSound(key: string) {
+    const buffer = soundBuffers[key];
+    if (buffer) {
+      const source = audioContext.createBufferSource();
+      source.buffer = buffer;
+      source.connect(audioContext.destination);
+      source.start();
     }
   }
+
   function handleKeyPress (event:KeyboardEvent) {
     pressedKey = event.key;
     const sound = soundBox.find(sound => sound.shortcut === pressedKey);
@@ -47,12 +74,14 @@
     pressedKey = null; // Reset pressedKey when key is released
   });
 
-  // Cleanup event listener when the component is destroyed
-  import { onDestroy } from 'svelte';
+  onMount(() => {
+    loadSounds();
+  });
 
   onDestroy(() => {
     window.removeEventListener('keypress', handleKeyPress);
   });
+
 </script>
 
 <style>
