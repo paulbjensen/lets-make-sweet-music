@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    const { playSound, pressedKeys } = $props();
+    const { pressKey, releaseKey, pressedKeys } = $props();
 
     const keys = [
         { type: 'upper', id: 1, shortcut: 'a' },
@@ -46,6 +46,7 @@
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+        touch-action: manipulation;
     }
 
     .pressed {
@@ -94,8 +95,11 @@
         <div class="upper-keys">
             {#each keys.filter(key => key.type === 'upper') as key}
                 <button class="upper-key {pressedKeys.includes(key.shortcut) ? 'pressed' : ''}"
-                     onclick={() => { playSound(key.shortcut);}}
-                     data-id={key.id}
+                    onmousedown={() => { pressKey(key.shortcut);}}
+                    onmouseup={() => { releaseKey(key.shortcut);}}
+                    ontouchstart={() => { pressKey(key.shortcut);}}
+                    ontouchend={() => { releaseKey(key.shortcut);}}
+                    data-id={key.id}
                 >
                     <div class="key-label">
                         {key.shortcut}

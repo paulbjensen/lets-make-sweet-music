@@ -6,17 +6,25 @@
 
   let pressedKeys: string[] = [];
 
+  function pressKey (key: string) {
+    if (!pressedKeys.includes(key)) {
+      pressedKeys = [...pressedKeys, key];
+    }
+    playSound(key);
+  }
+
+  function releaseKey (key: string) {
+    pressedKeys = pressedKeys.filter(k => k !== key);
+  }
+
   function handleKeyPress (event:KeyboardEvent) {
     const pressedKey = event.key;
-    if (!pressedKeys.includes(pressedKey)) {
-      pressedKeys = [...pressedKeys, pressedKey];
-    }
-    playSound(pressedKey);
+    pressKey(pressedKey);
   }
 
   window.addEventListener('keypress', handleKeyPress);
   window.addEventListener('keyup', (event) => {
-    pressedKeys = pressedKeys.filter(key => key !== event.key);
+    releaseKey(event.key);
   });
 
   onMount(loadSounds);
@@ -49,5 +57,5 @@
   <div id="logo">
     <img src={logo} alt="Let's make Sweet Music" width="363" height="109" fetchpriority="high" />
   </div>
-  <Keyboard {playSound} pressedKeys={pressedKeys} />
+  <Keyboard {pressKey} {releaseKey} pressedKeys={pressedKeys} />
 </main>
