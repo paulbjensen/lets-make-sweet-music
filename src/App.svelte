@@ -92,7 +92,7 @@
 
 <main>
   <div id="logo">
-    <img src={logo} alt="Let's make... Sweet Music" width="363" height="109" />
+    <img src={logo} alt="Let's make... Sweet Music" width="363" height="109" fetchpriority="high" />
   </div>
   <Keyboard {playSound} pressedKeys={pressedKeys} />
 </main>
