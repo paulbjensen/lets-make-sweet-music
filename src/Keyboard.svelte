@@ -97,8 +97,6 @@
                 <button class="upper-key {pressedKeys.includes(key.shortcut) ? 'pressed' : ''}"
                     onmousedown={() => { pressKey(key.shortcut);}}
                     onmouseup={() => { releaseKey(key.shortcut);}}
-                    ontouchstart={() => { pressKey(key.shortcut);}}
-                    ontouchend={() => { releaseKey(key.shortcut);}}
                     data-id={key.id}
                 >
                     <div class="key-label">
