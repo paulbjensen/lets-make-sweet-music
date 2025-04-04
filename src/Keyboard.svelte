@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    const { playSound, pressedKey } = $props();
+    const { playSound, pressedKeys } = $props();
 
     const keys = [
         { type: 'upper', id: 1, shortcut: 'a' },
@@ -93,7 +93,7 @@
     <div class="keys">
         <div class="upper-keys">
             {#each keys.filter(key => key.type === 'upper') as key}
-                <button class="upper-key {pressedKey === key.shortcut ? 'pressed' : ''}"
+                <button class="upper-key {pressedKeys.includes(key.shortcut) ? 'pressed' : ''}"
                      onclick={() => { playSound(key.shortcut);}}
                      data-id={key.id}
                 >
