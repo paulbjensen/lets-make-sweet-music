@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import logo from './assets/logo.png'
+  import logo from './assets/logo.svg'
   import Keyboard from './Keyboard.svelte';
 
   let pressedKeys: string[] = [];
@@ -51,10 +51,11 @@
   }
 
   function handleKeyPress (event:KeyboardEvent) {
-    if (!pressedKeys.includes(event.key)) {
-      pressedKeys = [...pressedKeys, event.key];
+    const pressedKey = event.key;
+    if (!pressedKeys.includes(pressedKey)) {
+      pressedKeys = [...pressedKeys, pressedKey];
     }
-    playSound(event.key);
+    playSound(pressedKey);
   }
 
   window.addEventListener('keypress', handleKeyPress);
@@ -62,9 +63,7 @@
     pressedKeys = pressedKeys.filter(key => key !== event.key);
   });
 
-  onMount(() => {
-    loadSounds();
-  });
+  onMount(loadSounds);
 
   onDestroy(() => {
     window.removeEventListener('keypress', handleKeyPress);
@@ -92,7 +91,7 @@
 
 <main>
   <div id="logo">
-    <img src={logo} alt="Let's make... Sweet Music" width="363" height="109" fetchpriority="high" />
+    <img src={logo} alt="Let's make Sweet Music" />
   </div>
   <Keyboard {playSound} pressedKeys={pressedKeys} />
 </main>
