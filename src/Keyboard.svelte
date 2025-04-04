@@ -2,6 +2,18 @@
 
     const { pressKey, releaseKey, pressedKeys } = $props();
 
+    /* 
+        This is a list of keys that are available on the keyboard.
+        The keys are divided into two types: upper and lower.
+        The upper keys are the ones that are used for the main keyboard.
+        The lower keys (the ones in black) are yet to be implemented.
+
+        At some point I want to make this a configurable property so that
+        the user can choose:
+
+        - What keys are available, in what layout
+        - What keyboard shortcuts they are mapped to
+    */
     const keys = [
         { type: 'upper', id: 1, shortcut: 'a' },
         { type: 'upper', id: 2, shortcut: 's' },

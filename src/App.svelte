@@ -1,11 +1,18 @@
 <script lang="ts">
+  // Dependencies
   import { onMount, onDestroy } from 'svelte';
   import logo from './assets/logo.svg'
   import Keyboard from './Keyboard.svelte';
   import { loadSounds, playSound } from './soundBox';
 
+  // This keeps a track of the keys that are currently pressed
   let pressedKeys: string[] = [];
 
+  /*
+    This function is called when a key is pressed
+    It adds the key to the pressedKeys array and plays the sound
+    associated with the key.
+  */
   function pressKey (key: string) {
     if (!pressedKeys.includes(key)) {
       pressedKeys = [...pressedKeys, key];
@@ -13,30 +20,43 @@
     playSound(key);
   }
 
+  /*
+    This function is called when a key is released
+    It removes the key from the pressedKeys array.
+  */
   function releaseKey (key: string) {
     pressedKeys = pressedKeys.filter(k => k !== key);
   }
 
+  /*
+    This function is called when a key on the computer keyboard is pressed.
+  */
   function handleKeyPress (event:KeyboardEvent) {
-    const pressedKey = event.key;
-    pressKey(pressedKey);
+    pressKey(event.key);
   }
 
-  window.addEventListener('keypress', handleKeyPress);
-  window.addEventListener('keyup', (event) => {
+  /*
+    This function is called when a key on the computer keyboard is released.
+  */
+  function handleKeyUp (event:KeyboardEvent) {
     releaseKey(event.key);
-  });
+  }
 
+  /* bindings for keyboard actions */
+  window.addEventListener('keypress', handleKeyPress);
+  window.addEventListener('keyup', handleKeyUp);
+
+  /* When the component mounts, we want to load the sounds for playback */
   onMount(loadSounds);
 
+  /* When the component is destroyed, we want to remove the event listeners */
   onDestroy(() => {
     window.removeEventListener('keypress', handleKeyPress);
+    window.removeEventListener('keyup', handleKeyUp);
   });
-
 </script>
 
 <style>
-
   #logo {
     margin-bottom: 20px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
