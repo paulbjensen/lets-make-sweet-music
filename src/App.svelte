@@ -3,7 +3,7 @@
   import { onMount, onDestroy } from 'svelte';
   import logo from './assets/logo.svg'
   import Keyboard from './Keyboard.svelte';
-  import { loadSounds, playSound } from './soundBox';
+  import { soundBox } from './soundBox';
 
   // This keeps a track of the keys that are currently pressed
   let pressedKeys: string[] = [];
@@ -17,7 +17,7 @@
     if (!pressedKeys.includes(key)) {
       pressedKeys = [...pressedKeys, key];
     }
-    playSound(key);
+    soundBox.playSound(key);
   }
 
   /*
@@ -47,7 +47,7 @@
   window.addEventListener('keyup', handleKeyUp);
 
   /* When the component mounts, we want to load the sounds for playback */
-  onMount(loadSounds);
+  onMount(async () => { await soundBox.loadSounds(); });
 
   /* When the component is destroyed, we want to remove the event listeners */
   onDestroy(() => {
