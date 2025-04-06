@@ -1,12 +1,24 @@
 <script lang="ts">
   // Dependencies
   import { onMount, onDestroy } from 'svelte';
-  import logo from './assets/logo.svg'
-  import Keyboard from './Keyboard.svelte';
+
+  // Components
+  import Keyboard from './components/Keyboard.svelte';
+  import Logo from './components/Logo.svelte';
+	import RecordButton from './components/RecordButton.svelte';
+  import PlaybackButton from './components/PlaybackButton.svelte';
+
+  // Utils
+  import Recording from './utils/Recording/Recording';
   import { soundBox } from './soundBox';
 
   // This keeps a track of the keys that are currently pressed
   let pressedKeys: string[] = [];
+
+  const recording = new Recording();
+
+  let enablePlayback = false;
+  let isPlaying = false; 
 
   /*
     This function is called when a key is pressed
@@ -17,6 +29,8 @@
     if (!pressedKeys.includes(key)) {
       pressedKeys = [...pressedKeys, key];
     }
+    recording.addEvent({ type: 'pressKey', key });
+    // recording = recording; // 👈 trigger reactivity
     soundBox.playSound(key);
   }
 
@@ -25,6 +39,8 @@
     It removes the key from the pressedKeys array.
   */
   function releaseKey (key: string) {
+    recording.addEvent({ type: 'releaseKey', key });
+    // recording = recording; // 👈 trigger reactivity
     pressedKeys = pressedKeys.filter(k => k !== key);
   }
 
@@ -54,28 +70,56 @@
     window.removeEventListener('keypress', handleKeyPress);
     window.removeEventListener('keyup', handleKeyUp);
   });
+
+
+  // Actions for starting and stopping recording
+  function startRecording() {
+    recording.start();
+    enablePlayback = false;
+  }
+
+  function stopRecording() {
+    recording.stop();
+    if (recording.events.length > 0) {
+      enablePlayback = true;
+    }
+  }
+
+  function play() {
+    isPlaying = true;
+    recording.events.forEach(event => {
+      const delay = event.timestamp;
+      setTimeout(() => {
+        if (event.type === 'pressKey') {
+          pressKey(event.key);
+        } else if (event.type === 'releaseKey') {
+          releaseKey(event.key);
+        }
+        if (event === recording.events[recording.events.length - 1]) {
+          isPlaying = false;
+        }
+      }, delay);
+    });
+  }
+
 </script>
 
 <style>
-  #logo {
-    margin-bottom: 20px;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
-    width: 363px;
-    height: 109px;
-  }
-
   main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    grid-row-gap: 20px;
   }
 </style>
 
 <main>
-  <div id="logo">
-    <img src={logo} alt="Let's make Sweet Music" width="363" height="109" fetchpriority="high" />
-  </div>
+  <Logo />
   <Keyboard {pressKey} {releaseKey} pressedKeys={pressedKeys} />
+  <div class="record-and-playback-buttons">
+    <RecordButton {startRecording} {stopRecording} />
+    <PlaybackButton {isPlaying} {play} {enablePlayback} />
+  </div>
 </main>
