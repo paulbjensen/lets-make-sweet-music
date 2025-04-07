@@ -18,6 +18,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "@sentry/svelte": "^9.11.0"
+    "@sentry/svelte": "^9.11.0",
+    "@sentry/vite-plugin": "^3.3.1"
   }
 }
