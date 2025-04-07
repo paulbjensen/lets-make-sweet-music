@@ -7,6 +7,7 @@
   import Logo from './components/Logo.svelte';
 	import RecordButton from './components/RecordButton.svelte';
   import PlaybackButton from './components/PlaybackButton.svelte';
+  import Oscilloscope from './components/Oscilloscope.svelte';
 
   // Utils
   import Recording from './utils/Recording/Recording';
@@ -133,5 +134,11 @@
   <div class="record-and-playback-buttons">
     <RecordButton {startRecording} {stopRecording} />
     <PlaybackButton {isPlaying} {play} {enablePlayback} />
+    <Oscilloscope
+      analyser={soundBox.analyser}
+      dataArray={soundBox.dataArray}
+      bufferLength={soundBox.bufferLength}
+      {isPlaying}
+    />
   </div>
 </main>

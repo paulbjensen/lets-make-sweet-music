@@ -6,11 +6,21 @@ export class SoundBox {
   audioContext: AudioContext;
   soundBuffers: Record<string, AudioBuffer>;
   keyToFile: Record<string, string>;
+  source: AudioBufferSourceNode | null = null;
+  analyser: AnalyserNode;
+  dataArray: Uint8Array;
+  bufferLength: number;
 
   constructor(initialKeyToFile: Record<string, string>) {
     this.audioContext = new AudioContext();
     this.soundBuffers = {};
     this.keyToFile = initialKeyToFile;
+
+    // Setup analyser
+    this.analyser = this.audioContext.createAnalyser();
+    this.analyser.fftSize = 2048;
+    this.bufferLength = this.analyser.fftSize;
+    this.dataArray = new Uint8Array(this.bufferLength);
   }
 
   async loadSounds () {
@@ -26,10 +36,11 @@ export class SoundBox {
   playSound (key: string) {
     const buffer = this.soundBuffers[key];
     if (buffer) {
-      const source = this.audioContext.createBufferSource();
-      source.buffer = buffer;
-      source.connect(this.audioContext.destination);
-      source.start();
+      this.source = this.audioContext.createBufferSource();
+      this.source.buffer = buffer;
+      this.source.connect(this.analyser);
+      this.analyser.connect(this.audioContext.destination);
+      this.source.start();
     }
   }
 }
