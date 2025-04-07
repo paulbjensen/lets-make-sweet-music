@@ -113,6 +113,18 @@
     height: 100vh;
     grid-row-gap: 20px;
   }
+
+  .record-and-playback-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background: #333;
+    padding: 20px 40px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  }
 </style>
 
 <main>
