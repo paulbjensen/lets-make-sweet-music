@@ -1,30 +1,5 @@
 <script lang="ts">
-
-    const { pressKey, releaseKey, pressedKeys } = $props();
-
-    /* 
-        This is a list of keys that are available on the keyboard.
-        The keys are divided into two types: upper and lower.
-        The upper keys are the ones that are used for the main keyboard.
-        The lower keys (the ones in black) are yet to be implemented.
-
-        At some point I want to make this a configurable property so that
-        the user can choose:
-
-        - What keys are available, in what layout
-        - What keyboard shortcuts they are mapped to
-    */
-    const keys = [
-        { type: 'upper', id: 1, shortcut: 'a' },
-        { type: 'upper', id: 2, shortcut: 's' },
-        { type: 'upper', id: 3, shortcut: 'd' },
-        { type: 'upper', id: 4, shortcut: 'f' },
-        { type: 'upper', id: 5, shortcut: 'g' },
-        { type: 'upper', id: 6, shortcut: 'h' },
-        { type: 'upper', id: 7, shortcut: 'j' },
-        { type: 'upper', id: 8, shortcut: 'k' },
-    ];
-
+    const { keys, pressKey, releaseKey, pressedKeys } = $props();
 </script>
 
 <style>
@@ -37,7 +12,7 @@
         width: intrinsic;
     }
 
-    .upper-keys {
+    .lower-keys {
         display: flex;
         justify-content: space-between;
         margin-bottom: 20px;
@@ -47,7 +22,7 @@
         position: relative;
     }
 
-    .upper-key {
+    .lower-key {
         width: 50px;
         height: 200px;
         background-color: white;
@@ -59,6 +34,11 @@
         border-bottom-left-radius: 10px;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
         touch-action: manipulation;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        padding-bottom: 10px;
     }
 
     .pressed {
@@ -66,24 +46,27 @@
         0px 1px 1px rgba(0, 0, 0, 0.5);
     }
 
-    .key-label {
-        position: absolute;
-        bottom: 5%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    .key-note {
         font-size: 18px;
         font-weight: bold;
-        color: #ccc;
-        text-align: center;
+        font-style: italic;
+        color: #333;
         text-transform: uppercase;
     }
 
-    .upper-key:hover {
+    .key-shortcut {
+        font-size: 18px;
+        font-weight: bold;
+        color: #ccc;
+        text-transform: uppercase;
+    }
+
+    .lower-key:hover {
         background-color: rgb(250, 226, 72);
         cursor: pointer;
     }
 
-    .upper-key:active, .pressed {
+    .lower-key:active, .pressed {
         background-color: rgb(255, 160, 45);
     }
 
@@ -104,15 +87,18 @@
 
 <div class="keyboard">
     <div class="keys">
-        <div class="upper-keys">
-            {#each keys.filter(key => key.type === 'upper') as key}
-                <button class="upper-key {pressedKeys.includes(key.shortcut) ? 'pressed' : ''}"
-                    onmousedown={() => { pressKey(key.shortcut);}}
-                    onmouseup={() => { releaseKey(key.shortcut);}}
+        <div class="lower-keys">
+            {#each keys.filter(key => key.type === 'lower') as key}
+                <button class="lower-key {pressedKeys.includes(key.note) ? 'pressed' : ''}"
+                    onmousedown={() => { pressKey(key.note);}}
+                    onmouseup={() => { releaseKey(key.note);}}
                     data-id={key.id}
                 >
-                    <div class="key-label">
-                        {key.shortcut}
+                    <div class="key-note">
+                      {key.note}
+                    </div>
+                    <div class="key-shortcut">
+                      {key.shortcut}
                     </div>
                 </button>
             {/each}

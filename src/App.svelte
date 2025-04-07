@@ -21,6 +21,30 @@
   let enablePlayback = false;
   let isPlaying = false; 
 
+    /* 
+        This is a list of keys that are available on the keyboard.
+        The keys are divided into two types: upper and lower.
+        The lower keys are the ones that are used for the white keys.
+        The upper keys (the ones in black) are yet to be implemented.
+
+        At some point I want to make this a configurable property so that
+        the user can choose:
+
+        - What keys are available, in what layout
+        - What keyboard shortcuts they are mapped to
+    */
+    const keys = [
+        { type: 'lower', id: 1, note: 'C5', shortcut: 'a' },
+        { type: 'lower', id: 2, note: 'D', shortcut: 's' },
+        { type: 'lower', id: 3, note: 'E', shortcut: 'd' },
+        { type: 'lower', id: 4, note: 'F', shortcut: 'f' },
+        { type: 'lower', id: 5, note: 'G', shortcut: 'g' },
+        { type: 'lower', id: 6, note: 'A', shortcut: 'h' },
+        { type: 'lower', id: 7, note: 'B', shortcut: 'j' },
+        { type: 'lower', id: 8, note: 'C6', shortcut: 'k' },
+    ];
+
+
   /*
     This function is called when a key is pressed
     It adds the key to the pressedKeys array and plays the sound
@@ -49,14 +73,18 @@
     This function is called when a key on the computer keyboard is pressed.
   */
   function handleKeyPress (event:KeyboardEvent) {
-    pressKey(event.key);
+    const note = keys.find(key => key.shortcut === event.key)?.note;
+    if (!note) return;
+    pressKey(note);
   }
 
   /*
     This function is called when a key on the computer keyboard is released.
   */
   function handleKeyUp (event:KeyboardEvent) {
-    releaseKey(event.key);
+    const note = keys.find(key => key.shortcut === event.key)?.note;
+    if (!note) return;
+    releaseKey(note);
   }
 
   /* bindings for keyboard actions */
@@ -130,7 +158,7 @@
 
 <main>
   <Logo />
-  <Keyboard {pressKey} {releaseKey} pressedKeys={pressedKeys} />
+  <Keyboard keys={keys} {pressKey} {releaseKey} pressedKeys={pressedKeys} />
   <div class="record-and-playback-buttons">
     <RecordButton {startRecording} {stopRecording} />
     <PlaybackButton {isPlaying} {play} {enablePlayback} />
