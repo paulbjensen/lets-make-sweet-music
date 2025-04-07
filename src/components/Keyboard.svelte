@@ -1,5 +1,10 @@
 <script lang="ts">
     const { keys, pressKey, releaseKey, pressedKeys } = $props();
+    import type { Key, KeyType } from '../types';
+
+    // Filter function to get only lower keys
+    const filterForKeyType = (type: KeyType) => (key: Key) => key.type === type;
+
 </script>
 
 <style>
@@ -88,7 +93,7 @@
 <div class="keyboard">
     <div class="keys">
         <div class="lower-keys">
-            {#each keys.filter(key => key.type === 'lower') as key}
+            {#each keys.filter(filterForKeyType('lower')) as key}
                 <button class="lower-key {pressedKeys.includes(key.note) ? 'pressed' : ''}"
                     onmousedown={() => { pressKey(key.note);}}
                     onmouseup={() => { releaseKey(key.note);}}
