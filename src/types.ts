@@ -1,7 +1,7 @@
 export type KeyType = 'lower' | 'upper';
 
 export type Key = {
-    id: string;
+    id: number;
     note: string;
     shortcut: string;
     type: KeyType;

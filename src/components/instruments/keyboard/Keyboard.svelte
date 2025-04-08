@@ -1,10 +1,16 @@
 <script lang="ts">
     const { keys, pressKey, releaseKey, pressedKeys } = $props();
-    import type { Key, KeyType } from '../types';
+    import type { Key, KeyType } from '../../../types';
     import KeyboardKey from './KeyboardKey.svelte';
 
     // Filter function to get only lower keys
     const filterForKeyType = (type: KeyType) => (key: Key) => key.type === type;
+
+    // Potential refactoring of html
+    // const keySet = [
+    //     { class: 'lower-keys', type: 'lower' },
+    //     { class: 'upper-keys', type: 'upper' }
+    // ];
 
 </script>
 

@@ -61,11 +61,6 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } = $props
         left: 95px;
     }
 
-    .pressed {
-        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.5),
-        0px 1px 1px rgba(0, 0, 0, 0.5);
-    }
-
     .key-note {
         font-size: 18px;
         font-weight: bold;
@@ -96,8 +91,10 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } = $props
         cursor: pointer;
     }
 
-    .lower-key:active, .upper-key:active, .pressed {
+    .pressed {
         background-color: rgb(255, 160, 45);
+        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.5),
+        0px 1px 1px rgba(0, 0, 0, 0.5);
     }
 
 </style>

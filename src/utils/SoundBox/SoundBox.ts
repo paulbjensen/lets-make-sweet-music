@@ -1,5 +1,15 @@
 /*
     This class is used to manage loading sounds and playing them.
+
+    I think that a few changes worth making are:
+
+    - We need a way to trigger an event when the sounds are loaded, so that the UI can display
+      a loading status indicator in the UI.
+    - We also need a way to handle sounds that might not load (networking issues, missing file etc)
+      - Retry, disable the sound on the instrument, or something else?
+    - We also need a way relate this to instruments, as sounds may be specific to an instrument
+      - At the moment the oscillator is inherently linked to the soundBox, but perhaps we need to 
+        structure this code differently to mimic how oscillators are linked to instruments in real life.
 */
 
 export class SoundBox {
