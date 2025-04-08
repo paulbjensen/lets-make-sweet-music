@@ -1,6 +1,7 @@
 <script lang="ts">
     const { keys, pressKey, releaseKey, pressedKeys } = $props();
     import type { Key, KeyType } from '../types';
+    import KeyboardKey from './KeyboardKey.svelte';
 
     // Filter function to get only lower keys
     const filterForKeyType = (type: KeyType) => (key: Key) => key.type === type;
@@ -23,56 +24,15 @@
         margin-bottom: 20px;
     }
 
+    .upper-keys {
+        position: absolute;
+        top: 20px;
+        display: grid;
+        grid-template-columns: auto auto auto auto auto;
+    }
+
     .keys {
         position: relative;
-    }
-
-    .lower-key {
-        width: 50px;
-        height: 200px;
-        background-color: white;
-        border: 1px solid black;
-        margin: 0px;
-        position: relative;
-        z-index: 1;
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
-        touch-action: manipulation;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: center;
-        padding-bottom: 10px;
-    }
-
-    .pressed {
-        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.5),
-        0px 1px 1px rgba(0, 0, 0, 0.5);
-    }
-
-    .key-note {
-        font-size: 18px;
-        font-weight: bold;
-        font-style: italic;
-        color: #333;
-        text-transform: uppercase;
-    }
-
-    .key-shortcut {
-        font-size: 18px;
-        font-weight: bold;
-        color: #ccc;
-        text-transform: uppercase;
-    }
-
-    .lower-key:hover {
-        background-color: rgb(250, 226, 72);
-        cursor: pointer;
-    }
-
-    .lower-key:active, .pressed {
-        background-color: rgb(255, 160, 45);
     }
 
     .keyboard-top-case {
@@ -94,18 +54,28 @@
     <div class="keys">
         <div class="lower-keys">
             {#each keys.filter(filterForKeyType('lower')) as key}
-                <button class="lower-key {pressedKeys.includes(key.note) ? 'pressed' : ''}"
+                <KeyboardKey
+                    keyClass="lower-key"
+                    pressed={pressedKeys.includes(key.note)}
                     onmousedown={() => { pressKey(key.note);}}
                     onmouseup={() => { releaseKey(key.note);}}
-                    data-id={key.id}
-                >
-                    <div class="key-note">
-                      {key.note}
-                    </div>
-                    <div class="key-shortcut">
-                      {key.shortcut}
-                    </div>
-                </button>
+                    id={key.id}
+                    shortcut={key.shortcut}
+                    note={key.note}
+                />
+            {/each}
+        </div>
+        <div class="upper-keys">
+            {#each keys.filter(filterForKeyType('upper')) as key}
+                <KeyboardKey
+                    keyClass="upper-key"
+                    pressed={pressedKeys.includes(key.note)}
+                    onmousedown={() => { pressKey(key.note);}}
+                    onmouseup={() => { releaseKey(key.note);}}
+                    id={key.id}
+                    shortcut={key.shortcut}
+                    note={key.note}
+                />
             {/each}
         </div>
     </div>

@@ -24,14 +24,20 @@ import soundEight from './assets/keyboard/8.mp3';
 // I feel like this bit could be extracted out as configuration,
 // as well as imports for the sounds - this way, the soundBox can be loaded
 const keyToFile: Record<string, string> = {
-  'C5': soundOne,
-  'D': soundTwo,
-  'E': soundThree,
-  'F': soundFour,
-  'G': soundFive,
-  'A': soundSix,
-  'B': soundSeven,
-  'C6': soundEight,
+  'C3': soundOne,
+  'D3': soundTwo,
+  'E3': soundThree,
+  'F3': soundFour,
+  'G3': soundFive,
+  'A3': soundSix,
+  'B3': soundSeven,
+  'C4': soundEight,
+  'D4': soundEight,
+  'C#3': soundEight,
+  'D#3': soundEight,
+  'F#3': soundEight,
+  'G#3': soundEight,
+  'A#3': soundEight,
 };
 
 const soundBox = new SoundBox(keyToFile);

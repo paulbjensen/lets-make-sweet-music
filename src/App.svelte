@@ -34,14 +34,20 @@
         - What keyboard shortcuts they are mapped to
     */
     const keys = [
-        { type: 'lower', id: 1, note: 'C5', shortcut: 'a' },
-        { type: 'lower', id: 2, note: 'D', shortcut: 's' },
-        { type: 'lower', id: 3, note: 'E', shortcut: 'd' },
-        { type: 'lower', id: 4, note: 'F', shortcut: 'f' },
-        { type: 'lower', id: 5, note: 'G', shortcut: 'g' },
-        { type: 'lower', id: 6, note: 'A', shortcut: 'h' },
-        { type: 'lower', id: 7, note: 'B', shortcut: 'j' },
-        { type: 'lower', id: 8, note: 'C6', shortcut: 'k' },
+        { type: 'lower', id: 1, note: 'C3', shortcut: 'a' },
+        { type: 'lower', id: 2, note: 'D3', shortcut: 's' },
+        { type: 'lower', id: 3, note: 'E3', shortcut: 'd' },
+        { type: 'lower', id: 4, note: 'F3', shortcut: 'f' },
+        { type: 'lower', id: 5, note: 'G3', shortcut: 'g' },
+        { type: 'lower', id: 6, note: 'A3', shortcut: 'h' },
+        { type: 'lower', id: 7, note: 'B3', shortcut: 'j' },
+        { type: 'lower', id: 8, note: 'C4', shortcut: 'k' },
+        // { type: 'lower', id: 8, note: 'D4', shortcut: 'l' },
+        { type: 'upper', id: 9, note: 'C#3', shortcut: 'w' },
+        { type: 'upper', id: 10, note: 'D#3', shortcut: 'e' },
+        { type: 'upper', id: 11, note: 'F#3', shortcut: 't' },
+        { type: 'upper', id: 12, note: 'G#3', shortcut: 'y' },
+        { type: 'upper', id: 12, note: 'A#3', shortcut: 'o' },
     ];
 
 
