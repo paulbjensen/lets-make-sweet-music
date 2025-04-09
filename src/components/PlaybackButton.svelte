@@ -1,6 +1,6 @@
 <script lang="ts">
-    const { enablePlayback, play, isPlaying } = $props();
-    import playIcon from '../assets/icons/play.svg';
+const { enablePlayback, play, isPlaying } = $props();
+import playIcon from "../assets/icons/play.svg";
 </script>
 
 <style>

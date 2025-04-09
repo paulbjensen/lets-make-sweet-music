@@ -11,42 +11,45 @@
 */
 
 export class SoundBox {
-  audioContext: AudioContext;
-  soundBuffers: Record<string, AudioBuffer>;
-  keyToFile: Record<string, string>;
-  source: AudioBufferSourceNode | null = null;
-  analyser?: AnalyserNode;
+	audioContext: AudioContext;
+	soundBuffers: Record<string, AudioBuffer>;
+	keyToFile: Record<string, string>;
+	source: AudioBufferSourceNode | null = null;
+	analyser?: AnalyserNode;
 
-  constructor(initialKeyToFile: Record<string, string>) {
-    this.audioContext = new AudioContext();
-    this.soundBuffers = {};
-    this.keyToFile = initialKeyToFile;
-  }
+	constructor(initialKeyToFile: Record<string, string>) {
+		this.audioContext = new AudioContext();
+		this.soundBuffers = {};
+		this.keyToFile = initialKeyToFile;
+	}
 
-  async loadSounds () {
-    const entries = Object.entries(this.keyToFile);
-    await Promise.all(entries.map(async ([key, src]) => {
-      const response = await fetch(src);
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-      this.soundBuffers[key] = audioBuffer;
-    }));
-  }
+	async loadSounds() {
+		const entries = Object.entries(this.keyToFile);
+		await Promise.all(
+			entries.map(async ([key, src]) => {
+				const response = await fetch(src);
+				const arrayBuffer = await response.arrayBuffer();
+				const audioBuffer =
+					await this.audioContext.decodeAudioData(arrayBuffer);
+				this.soundBuffers[key] = audioBuffer;
+			}),
+		);
+	}
 
-  playSound (key: string) {
-    const buffer = this.soundBuffers[key];
-    if (buffer) {
-      this.source = this.audioContext.createBufferSource();
-      this.source.buffer = buffer;
-      // This is where you can link up the analyser to the source
-      if (this.analyser) {
-        this.source.connect(this.analyser);
-        this.analyser.connect(this.audioContext.destination);
-      } else {
-        // If the analyser is not set up, just connect to the destination
-        this.source.connect(this.audioContext.destination);
-      }
-      this.source.start();
-    }
-  }
+	playSound(key: string) {
+		const buffer = this.soundBuffers[key];
+		if (buffer) {
+			this.source = this.audioContext.createBufferSource();
+			this.source.buffer = buffer;
+			// This is where you can link up the analyser to the source
+			if (this.analyser) {
+				this.source.connect(this.analyser);
+				this.analyser.connect(this.audioContext.destination);
+			} else {
+				// If the analyser is not set up, just connect to the destination
+				this.source.connect(this.audioContext.destination);
+			}
+			this.source.start();
+		}
+	}
 }

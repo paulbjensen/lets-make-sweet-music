@@ -1,55 +1,53 @@
 
 <script lang="ts">
+const { analyser, dataArray, bufferLength } = $props();
+import { onMount } from "svelte";
 
-    const { analyser, dataArray, bufferLength } = $props();
-    import { onMount } from 'svelte';
+let canvas: HTMLCanvasElement | null = null;
+let ctx: CanvasRenderingContext2D | null = null;
 
-    let canvas: HTMLCanvasElement | null = null;
-    let ctx: CanvasRenderingContext2D | null = null;
+function load() {
+	canvas = document.getElementById("oscilloscope") as HTMLCanvasElement;
+	if (!canvas) throw new Error("Canvas not found");
+	ctx = canvas.getContext("2d");
+	canvas.width = 220;
+	canvas.height = 40;
+	draw();
+}
 
-    function load() {
-        canvas = document.getElementById('oscilloscope') as HTMLCanvasElement;
-        if (!canvas) throw new Error('Canvas not found');
-        ctx = canvas.getContext('2d');
-        canvas.width = 220;
-        canvas.height = 40;
-        draw();
-    }
+onMount(load);
 
-    onMount(load);
+function draw() {
+	requestAnimationFrame(draw);
 
-    function draw() {
-      requestAnimationFrame(draw);
+	analyser.getByteTimeDomainData(dataArray);
+	if (!canvas) throw new Error("Canvas not found");
+	if (!ctx) throw new Error("Canvas context not found");
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      analyser.getByteTimeDomainData(dataArray);
-      if (!canvas) throw new Error('Canvas not found');
-      if (!ctx) throw new Error('Canvas context not found');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.lineWidth = 1.5;
+	ctx.strokeStyle = "lime";
+	ctx.beginPath();
 
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = 'lime';
-      ctx.beginPath();
+	const sliceWidth = (canvas.width * 1.0) / bufferLength;
+	let x = 0;
 
-      const sliceWidth = canvas.width * 1.0 / bufferLength;
-      let x = 0;
+	for (let i = 0; i < bufferLength; i++) {
+		const v = dataArray[i] / 128.0;
+		const y = (v * canvas.height) / 2;
 
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = v * canvas.height / 2;
+		if (i === 0) {
+			ctx.moveTo(x, y);
+		} else {
+			ctx.lineTo(x, y);
+		}
 
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
+		x += sliceWidth;
+	}
 
-        x += sliceWidth;
-      }
-
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.stroke();
-    }
-
+	ctx.lineTo(canvas.width, canvas.height / 2);
+	ctx.stroke();
+}
 </script>
 
 <style>

@@ -1,19 +1,19 @@
 <script lang="ts">
-    import recordIcon from '../assets/icons/record.svg';
-    import stopIcon from '../assets/icons/stop.svg';
+import recordIcon from "../assets/icons/record.svg";
+import stopIcon from "../assets/icons/stop.svg";
 
-    let recording = $state(false);
-    const { startRecording, stopRecording } = $props();
+let recording = $state(false);
+const { startRecording, stopRecording } = $props();
 
-    const toggleRecording = () => {
-        if (recording) {
-            stopRecording?.();
-            recording = false;
-        } else {
-            startRecording?.();
-            recording = true;
-        }
-    };
+const toggleRecording = () => {
+	if (recording) {
+		stopRecording?.();
+		recording = false;
+	} else {
+		startRecording?.();
+		recording = true;
+	}
+};
 </script>
 
 <style>

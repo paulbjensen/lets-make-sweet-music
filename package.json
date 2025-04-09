@@ -1,24 +1,28 @@
 {
-  "name": "lets-make-sweet-music",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
-  },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "@tsconfig/svelte": "^5.0.4",
-    "svelte": "^5.20.2",
-    "svelte-check": "^4.1.4",
-    "typescript": "~5.7.2",
-    "vite": "^6.2.0"
-  },
-  "dependencies": {
-    "@sentry/svelte": "^9.11.0",
-    "@sentry/vite-plugin": "^3.3.1"
-  }
+	"name": "lets-make-sweet-music",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+		"lint": "biome check",
+		"prepare": "husky",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@sveltejs/vite-plugin-svelte": "^5.0.3",
+		"@tsconfig/svelte": "^5.0.4",
+		"husky": "^9.1.7",
+		"svelte": "^5.20.2",
+		"svelte-check": "^4.1.4",
+		"typescript": "~5.7.2",
+		"vite": "^6.2.0"
+	},
+	"dependencies": {
+		"@sentry/svelte": "^9.11.0",
+		"@sentry/vite-plugin": "^3.3.1"
+	}
 }

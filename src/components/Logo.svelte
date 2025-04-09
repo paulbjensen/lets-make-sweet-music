@@ -1,10 +1,9 @@
 <script lang="ts">
-  import logo from '../assets/logo.svg';
+import logo from "../assets/logo.svg";
 
-  let { width, height } = $props();
-  if (!width) width = 363;
-  if (!height) height = 109;
-
+let { width, height } = $props();
+if (!width) width = 363;
+if (!height) height = 109;
 </script>
 
 <style>

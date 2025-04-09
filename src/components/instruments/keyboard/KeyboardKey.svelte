@@ -1,7 +1,6 @@
 <script lang="ts">
-
-const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } = $props();
-
+const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
+	$props();
 </script>
 
 <style>

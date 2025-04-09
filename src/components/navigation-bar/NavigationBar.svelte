@@ -1,5 +1,5 @@
 <script lang="ts">
-    /*
+/*
         This is the navigation bar component that will contain the following:
 
         A way to interact with the timeline
@@ -10,16 +10,24 @@
         A way to see the current position in the timeline (both seconds and bars/beats) 
     */
 
-   	import RecordButton from '../RecordButton.svelte';
-    import PlaybackButton from '../PlaybackButton.svelte';
-    import Oscilloscope from '../Oscilloscope.svelte';
-	import Logo from '../Logo.svelte';
+import Logo from "../Logo.svelte";
+import Oscilloscope from "../Oscilloscope.svelte";
+import PlaybackButton from "../PlaybackButton.svelte";
+import RecordButton from "../RecordButton.svelte";
 
-    /*
+/*
         NOTE - This is a bit of horrible props drilling that I will get around to removing later,
     */
-    const {startRecording, stopRecording, isPlaying, play, enablePlayback, analyser, dataArray, bufferLength } = $props();
-
+const {
+	startRecording,
+	stopRecording,
+	isPlaying,
+	play,
+	enablePlayback,
+	analyser,
+	dataArray,
+	bufferLength,
+} = $props();
 </script>
 
 <style>
