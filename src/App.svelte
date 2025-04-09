@@ -11,7 +11,15 @@
 
   // Utils
   import Recording from './utils/Recording/Recording';
+  import { Oscillator } from './utils/analysers/Oscillator';
   import { soundBox } from './soundBox';
+
+  // Here we connect the soundBox to the Oscillator
+  const oscillator = new Oscillator({
+    audioContext: soundBox.audioContext,
+    fftSize: 2048
+  });
+  soundBox.analyser = oscillator.analyser;
 
   /* This is used to store tracks */ 
   let tracks:Recording[] = $state([]);
@@ -174,8 +182,8 @@
 <NavigationBar
   {startRecording} {stopRecording} {isPlaying} {play} {enablePlayback}
   analyser={soundBox.analyser}
-  dataArray={soundBox.dataArray}
-  bufferLength={soundBox.bufferLength}
+  dataArray={oscillator.dataArray}
+  bufferLength={oscillator.bufferLength}
 />
 <main>
   <Tracks tracks={tracks} {pressKey} {releaseKey} {removeTrack} />

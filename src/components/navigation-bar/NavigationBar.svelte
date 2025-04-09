@@ -59,7 +59,6 @@
             analyser={analyser}
             dataArray={dataArray}
             bufferLength={bufferLength}
-            {isPlaying}
         />
     </div>
 </div>

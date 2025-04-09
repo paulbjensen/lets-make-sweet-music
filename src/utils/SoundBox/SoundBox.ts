@@ -8,8 +8,6 @@
     - We also need a way to handle sounds that might not load (networking issues, missing file etc)
       - Retry, disable the sound on the instrument, or something else?
     - We also need a way relate this to instruments, as sounds may be specific to an instrument
-      - At the moment the oscillator is inherently linked to the soundBox, but perhaps we need to 
-        structure this code differently to mimic how oscillators are linked to instruments in real life.
 */
 
 export class SoundBox {
@@ -17,20 +15,12 @@ export class SoundBox {
   soundBuffers: Record<string, AudioBuffer>;
   keyToFile: Record<string, string>;
   source: AudioBufferSourceNode | null = null;
-  analyser: AnalyserNode;
-  dataArray: Uint8Array;
-  bufferLength: number;
+  analyser?: AnalyserNode;
 
   constructor(initialKeyToFile: Record<string, string>) {
     this.audioContext = new AudioContext();
     this.soundBuffers = {};
     this.keyToFile = initialKeyToFile;
-
-    // Setup analyser
-    this.analyser = this.audioContext.createAnalyser();
-    this.analyser.fftSize = 2048;
-    this.bufferLength = this.analyser.fftSize;
-    this.dataArray = new Uint8Array(this.bufferLength);
   }
 
   async loadSounds () {
@@ -48,8 +38,14 @@ export class SoundBox {
     if (buffer) {
       this.source = this.audioContext.createBufferSource();
       this.source.buffer = buffer;
-      this.source.connect(this.analyser);
-      this.analyser.connect(this.audioContext.destination);
+      // This is where you can link up the analyser to the source
+      if (this.analyser) {
+        this.source.connect(this.analyser);
+        this.analyser.connect(this.audioContext.destination);
+      } else {
+        // If the analyser is not set up, just connect to the destination
+        this.source.connect(this.audioContext.destination);
+      }
       this.source.start();
     }
   }
