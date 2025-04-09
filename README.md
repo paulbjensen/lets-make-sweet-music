@@ -20,7 +20,7 @@ npm i
 npm run dev
 ```
 
-Then you should be able to open the app on [http://localhost:5173] and see it running there.
+Then you should be able to open the app on [http://localhost:5173](http://localhost:5173) and see it running there.
 
 ### License & Credits
 
