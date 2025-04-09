@@ -1,4 +1,4 @@
-import { SoundBox } from "./utils/SoundBox/SoundBox";
+import { SoundBox } from "../../../utils/SoundBox/SoundBox";
 
 /*
     This is used as a way to load sounds and play them
@@ -10,14 +10,14 @@ import { SoundBox } from "./utils/SoundBox/SoundBox";
 */
 
 // Here are the sounds that will be played when the keys are pressed
-import soundOne from "./assets/keyboard/1.mp3";
-import soundTwo from "./assets/keyboard/2.mp3";
-import soundThree from "./assets/keyboard/3.mp3";
-import soundFour from "./assets/keyboard/4.mp3";
-import soundFive from "./assets/keyboard/5.mp3";
-import soundSix from "./assets/keyboard/6.mp3";
-import soundSeven from "./assets/keyboard/7.mp3";
-import soundEight from "./assets/keyboard/8.mp3";
+import soundOne from "./sounds/1.mp3";
+import soundTwo from "./sounds/2.mp3";
+import soundThree from "./sounds/3.mp3";
+import soundFour from "./sounds/4.mp3";
+import soundFive from "./sounds/5.mp3";
+import soundSix from "./sounds/6.mp3";
+import soundSeven from "./sounds/7.mp3";
+import soundEight from "./sounds/8.mp3";
 
 // Keys are linked to keyboard shortcuts
 // I feel like this bit could be extracted out as configuration,
@@ -39,5 +39,5 @@ const keyToFile: Record<string, string> = {
 	"A#3": soundEight,
 };
 
-const soundBox = new SoundBox(keyToFile);
-export { soundBox };
+const keyboardSoundBox = new SoundBox(keyToFile);
+export { keyboardSoundBox };

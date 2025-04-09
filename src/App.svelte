@@ -1,25 +1,25 @@
 <script lang="ts">
 // Dependencies
-import { onDestroy, onMount } from "svelte";
+import { onMount } from "svelte";
 import type { Key } from "./types";
 
-// Components
+// UI Components
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
 import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import Tracks from "./components/tracks/Tracks.svelte";
 // import Timeline from './components/Timeline.svelte';
 
-import { soundBox } from "./soundBox";
+import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
 // Utils
 import Recording from "./utils/Recording/Recording";
 import { Oscillator } from "./utils/analysers/Oscillator";
 
 // Here we connect the soundBox to the Oscillator
 const oscillator = new Oscillator({
-	audioContext: soundBox.audioContext,
+	audioContext: keyboardSoundBox.audioContext,
 	fftSize: 2048,
 });
-soundBox.analyser = oscillator.analyser;
+keyboardSoundBox.analyser = oscillator.analyser;
 
 /* This is used to store tracks */
 let tracks: Recording[] = $state([]);
@@ -74,7 +74,7 @@ function pressKey(key: string) {
 		pressedKeys = [...pressedKeys, key];
 	}
 	recording.addEvent({ type: "pressKey", key });
-	soundBox.playSound(key);
+	keyboardSoundBox.playSound(key);
 }
 
 /*
@@ -86,37 +86,9 @@ function releaseKey(key: string) {
 	pressedKeys = pressedKeys.filter((k) => k !== key);
 }
 
-/*
-    This function is called when a key on the computer keyboard is pressed.
-  */
-function handleKeyPress(event: KeyboardEvent) {
-	const note = keys.find((key) => key.shortcut === event.key)?.note;
-	if (!note) return;
-	pressKey(note);
-}
-
-/*
-    This function is called when a key on the computer keyboard is released.
-  */
-function handleKeyUp(event: KeyboardEvent) {
-	const note = keys.find((key) => key.shortcut === event.key)?.note;
-	if (!note) return;
-	releaseKey(note);
-}
-
-/* bindings for keyboard actions */
-window.addEventListener("keypress", handleKeyPress);
-window.addEventListener("keyup", handleKeyUp);
-
 /* When the component mounts, we want to load the sounds for playback */
 onMount(async () => {
-	await soundBox.loadSounds();
-});
-
-/* When the component is destroyed, we want to remove the event listeners */
-onDestroy(() => {
-	window.removeEventListener("keypress", handleKeyPress);
-	window.removeEventListener("keyup", handleKeyUp);
+	await keyboardSoundBox.loadSounds();
 });
 
 // Starts the recording
@@ -183,8 +155,12 @@ function removeTrack(track: Recording) {
 </style>
 
 <NavigationBar
-  {startRecording} {stopRecording} {isPlaying} {play} {enablePlayback}
-  analyser={soundBox.analyser}
+  {startRecording}
+  {stopRecording}
+  {isPlaying}
+  {play}
+  {enablePlayback}
+  analyser={keyboardSoundBox.analyser}
   dataArray={oscillator.dataArray}
   bufferLength={oscillator.bufferLength}
 />

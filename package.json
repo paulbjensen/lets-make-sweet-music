@@ -7,7 +7,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
-		"format": "biome format",
+		"format": "biome format --fix",
 		"lint": "biome check",
 		"prepare": "husky",
 		"preview": "vite preview"

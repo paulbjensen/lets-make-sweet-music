@@ -1,4 +1,5 @@
 <script lang="ts">
+import { onDestroy, onMount } from "svelte";
 const { keys, pressKey, releaseKey, pressedKeys } = $props();
 import type { Key, KeyType } from "../../../types";
 import KeyboardKey from "./KeyboardKey.svelte";
@@ -11,6 +12,36 @@ const filterForKeyType = (type: KeyType) => (key: Key) => key.type === type;
 //     { class: 'lower-keys', type: 'lower' },
 //     { class: 'upper-keys', type: 'upper' }
 // ];
+
+/*
+    This function is called when a key on the computer keyboard is pressed.
+  */
+function handleKeyPress(event: KeyboardEvent) {
+	const note = keys.find((key: Key) => key.shortcut === event.key)?.note;
+	if (!note) return;
+	pressKey(note);
+}
+
+/*
+    This function is called when a key on the computer keyboard is released.
+  */
+function handleKeyUp(event: KeyboardEvent) {
+	const note = keys.find((key: Key) => key.shortcut === event.key)?.note;
+	if (!note) return;
+	releaseKey(note);
+}
+
+onMount(() => {
+	/* bindings for keyboard actions */
+	window.addEventListener("keypress", handleKeyPress);
+	window.addEventListener("keyup", handleKeyUp);
+});
+
+/* When the component is destroyed, we want to remove the event listeners */
+onDestroy(() => {
+	window.removeEventListener("keypress", handleKeyPress);
+	window.removeEventListener("keyup", handleKeyUp);
+});
 </script>
 
 <style>
