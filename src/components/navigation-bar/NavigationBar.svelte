@@ -47,18 +47,18 @@ function stopRecording() {
     This will look at the number of tracks that are in the tracks array
     and if there are no tracks, it will disable the playback button.
 */
-function checkIfPlayShouldBeEnabled () {
-    enablePlayback = tracks.length > 0;
+function checkIfPlayShouldBeEnabled() {
+	enablePlayback = tracks.length > 0;
 }
 
 onMount(() => {
 	eventEmitter.on("finishPlayingTracks", finishPlayingTracks);
-    eventEmitter.on('removeTrack', checkIfPlayShouldBeEnabled);
+	eventEmitter.on("removeTrack", checkIfPlayShouldBeEnabled);
 });
 
 onDestroy(() => {
 	eventEmitter.off("finishPlayingTracks", finishPlayingTracks);
-    eventEmitter.off('removeTrack', checkIfPlayShouldBeEnabled);
+	eventEmitter.off("removeTrack", checkIfPlayShouldBeEnabled);
 });
 </script>
 
