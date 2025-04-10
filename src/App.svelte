@@ -25,65 +25,20 @@ keyboardSoundBox.analyser = oscillator.analyser;
 /* This is used to store tracks */
 let tracks: Recording[] = $state([]);
 
-// This keeps a track of the keys that are currently pressed
-let pressedKeys: string[] = $state([]);
-/* 
-    This is a list of keys that are available on the keyboard.
-    The keys are divided into two types: upper and lower.
-    The lower keys are the ones that are used for the white keys.
-    The upper keys (the ones in black) are yet to be implemented.
-
-    At some point I want to make this a configurable property so that
-    the user can choose:
-
-    - What keys are available, in what layout
-    - What keyboard shortcuts they are mapped to
-
-    // This feels like it belongs to an instrument instance,
-    // in a sequence of instruments.
-  */
-const keys: Key[] = [
-	{ type: "lower", id: 1, note: "C3", shortcut: "a" },
-	{ type: "lower", id: 2, note: "D3", shortcut: "s" },
-	{ type: "lower", id: 3, note: "E3", shortcut: "d" },
-	{ type: "lower", id: 4, note: "F3", shortcut: "f" },
-	{ type: "lower", id: 5, note: "G3", shortcut: "g" },
-	{ type: "lower", id: 6, note: "A3", shortcut: "h" },
-	{ type: "lower", id: 7, note: "B3", shortcut: "j" },
-	{ type: "lower", id: 8, note: "C4", shortcut: "k" },
-	// { type: 'lower', id: 8, note: 'D4', shortcut: 'l' },
-	{ type: "upper", id: 9, note: "C#3", shortcut: "w" },
-	{ type: "upper", id: 10, note: "D#3", shortcut: "e" },
-	{ type: "upper", id: 11, note: "F#3", shortcut: "t" },
-	{ type: "upper", id: 12, note: "G#3", shortcut: "y" },
-	{ type: "upper", id: 12, note: "A#3", shortcut: "o" },
-];
-
 // This is the recording object that will be used to store the events
 // when recording
 const recording = new Recording();
 
-/*
-    This function is called when a key is pressed
-    It adds the key to the pressedKeys array and plays the sound
-    associated with the key.
-*/
 function pressKey(key: string) {
-	if (!pressedKeys.includes(key)) {
-		pressedKeys = [...pressedKeys, key];
-	}
 	recording.addEvent({ type: "pressKey", key });
 	keyboardSoundBox.playSound(key);
-	// eventEmitter.emit("eeKeyPressed", key);
 }
 
 /*
     This function is called when a key is released
-    It removes the key from the pressedKeys array.
 */
 function releaseKey(key: string) {
 	recording.addEvent({ type: "releaseKey", key });
-	pressedKeys = pressedKeys.filter((k) => k !== key);
 }
 
 // Removes a track from the tracks list
@@ -93,6 +48,15 @@ function removeTrack(track: Recording) {
 
 // This plays the recording
 function play() {
+  if (tracks.length === 0) {
+    console.log("No tracks to play");
+    eventEmitter.emit("finishPlayingTracks");
+    /* 
+      TODO - when there are no tracks left, we should set 
+      enablePlayback in the navigation bar component 
+      to false.
+    */
+  }
 	const hasFinished = new Array(tracks.length).fill(false);
 	for (const track of tracks) {
 		for (const event of track.events) {
@@ -143,13 +107,17 @@ onMount(async () => {
 	eventEmitter.on("playTracks", play);
 	eventEmitter.on("startRecording", startRecording);
 	eventEmitter.on("stopRecording", stopRecording);
+  eventEmitter.on("pressKey", (key) => pressKey(key as string));
+  eventEmitter.on("releaseKey", (key) => releaseKey(key as string));
 });
 
 onDestroy(() => {
 	eventEmitter.off("removeTrack", (track) => removeTrack(track as Recording));
 	eventEmitter.off("playTracks", play);
-	eventEmitter.on("startRecording", startRecording);
-	eventEmitter.on("stopRecording", stopRecording);
+	eventEmitter.off("startRecording", startRecording);
+	eventEmitter.off("stopRecording", stopRecording);
+  eventEmitter.off("pressKey", (key) => pressKey(key as string));
+  eventEmitter.off("releaseKey", (key) => releaseKey(key as string));
 });
 </script>
 
@@ -170,6 +138,6 @@ onDestroy(() => {
   {eventEmitter}
 />
 <main>
-  <Tracks tracks={tracks} {pressKey} {releaseKey} eventEmitter={eventEmitter} />
-  <Keyboard keys={keys} {pressKey} {releaseKey} pressedKeys={pressedKeys} />
+  <Tracks tracks={tracks} {pressKey} {releaseKey} {eventEmitter} />
+  <Keyboard {eventEmitter} />
 </main>
