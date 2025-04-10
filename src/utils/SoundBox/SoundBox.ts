@@ -64,16 +64,10 @@ export class SoundBox {
 	/*
 		Can't believe this worked. Amazing!
 
-		Now, the trick is to make it work seamlessly, so that you can burn the 
-		music file with one click and have it automatically stop recording when
-		it is finished.
+		I think that potentially one optimization would be to see if we can 
+		swap in the OfflineAudioContext to then burn and save the file,
+		without needing to do playback on the client. That would be very nice.
 
-		I think that this could be achieved through coordinating some events to 
-		trigger the start of recording, then playing the tracks, then when the 
-		track has finished playing, wait a few seconds then stop the recording.
-
-		For now I want to save the code at this commit stage, then I will do 
-		the tweaks afterwards.
 	*/
 	startBurning() {
 		this.isBurning = true;

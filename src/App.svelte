@@ -97,6 +97,19 @@ function stopRecording() {
 	}
 }
 
+function startBurning() {
+	keyboardSoundBox.startBurning();
+	eventEmitter.emit("playTracks");
+}
+
+function stopBurning() {
+	setTimeout(() => {
+		if (keyboardSoundBox.isBurning) {
+			keyboardSoundBox.stopBurning();
+		}
+	}, 3000); // We wait 3 seconds in case any sounds are still playing after the last keypress, like my waaaaaa!
+}
+
 /* When the component mounts, we want to load the sounds for playback */
 onMount(async () => {
 	await keyboardSoundBox.loadSounds();
@@ -106,6 +119,8 @@ onMount(async () => {
 	eventEmitter.on("stopRecording", stopRecording);
 	eventEmitter.on("pressKey", (key) => pressKey(key as string));
 	eventEmitter.on("releaseKey", (key) => releaseKey(key as string));
+	eventEmitter.on("startBurning", startBurning);
+	eventEmitter.on("finishPlayingTracks", stopBurning);
 });
 
 onDestroy(() => {
@@ -115,6 +130,8 @@ onDestroy(() => {
 	eventEmitter.off("stopRecording", stopRecording);
 	eventEmitter.off("pressKey", (key) => pressKey(key as string));
 	eventEmitter.off("releaseKey", (key) => releaseKey(key as string));
+	eventEmitter.off("startBurning", startBurning);
+	eventEmitter.off("finishPlayingTracks", stopBurning);
 });
 </script>
 
@@ -139,7 +156,4 @@ onDestroy(() => {
 <main>
   <Timeline {tracks} {eventEmitter} {pressKey} {releaseKey} />
   <Keyboard {eventEmitter} />
-  <button onclick={() => keyboardSoundBox.startBurning()}>Start burning</button>
-  <button onclick={() => keyboardSoundBox.stopBurning()}>Stop burning</button>
-
 </main>
