@@ -1,1 +1,4 @@
-npm run format && npm run lint
+npm run format
+npm run lint
+# Restage any files that were changed by biome and already staged
+git diff --name-only --diff-filter=ACM | grep . | xargs git add

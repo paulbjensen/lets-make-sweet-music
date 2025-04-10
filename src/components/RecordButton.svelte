@@ -36,7 +36,6 @@ const toggleRecording = () => {
     .record-button > img {
         pointer-events: none;
     }
-
 </style>
 
 <button class="record-button" onclick={toggleRecording}>
