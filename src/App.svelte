@@ -48,15 +48,15 @@ function removeTrack(track: Recording) {
 
 // This plays the recording
 function play() {
-  if (tracks.length === 0) {
-    console.log("No tracks to play");
-    eventEmitter.emit("finishPlayingTracks");
-    /* 
+	if (tracks.length === 0) {
+		console.log("No tracks to play");
+		eventEmitter.emit("finishPlayingTracks");
+		/* 
       TODO - when there are no tracks left, we should set 
       enablePlayback in the navigation bar component 
       to false.
     */
-  }
+	}
 	const hasFinished = new Array(tracks.length).fill(false);
 	for (const track of tracks) {
 		for (const event of track.events) {
@@ -107,8 +107,8 @@ onMount(async () => {
 	eventEmitter.on("playTracks", play);
 	eventEmitter.on("startRecording", startRecording);
 	eventEmitter.on("stopRecording", stopRecording);
-  eventEmitter.on("pressKey", (key) => pressKey(key as string));
-  eventEmitter.on("releaseKey", (key) => releaseKey(key as string));
+	eventEmitter.on("pressKey", (key) => pressKey(key as string));
+	eventEmitter.on("releaseKey", (key) => releaseKey(key as string));
 });
 
 onDestroy(() => {
@@ -116,8 +116,8 @@ onDestroy(() => {
 	eventEmitter.off("playTracks", play);
 	eventEmitter.off("startRecording", startRecording);
 	eventEmitter.off("stopRecording", stopRecording);
-  eventEmitter.off("pressKey", (key) => pressKey(key as string));
-  eventEmitter.off("releaseKey", (key) => releaseKey(key as string));
+	eventEmitter.off("pressKey", (key) => pressKey(key as string));
+	eventEmitter.off("releaseKey", (key) => releaseKey(key as string));
 });
 </script>
 

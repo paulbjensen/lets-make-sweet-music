@@ -49,19 +49,19 @@ const keys: Key[] = [
 /*
   This function is called when a key on the computer keyboard is pressed.
 */
-function pressKey (note: string) {
-    if (!pressedKeys.includes(note)) {
-        pressedKeys = [...pressedKeys, note];
-    }
-    eventEmitter.emit("pressKey", note);
+function pressKey(note: string) {
+	if (!pressedKeys.includes(note)) {
+		pressedKeys = [...pressedKeys, note];
+	}
+	eventEmitter.emit("pressKey", note);
 }
 
 /*
   This function is called when a key on the computer keyboard is released.
 */
-function releaseKey (note: string) {
-    pressedKeys = pressedKeys.filter((key) => key !== note);
-    eventEmitter.emit("releaseKey", note);
+function releaseKey(note: string) {
+	pressedKeys = pressedKeys.filter((key) => key !== note);
+	eventEmitter.emit("releaseKey", note);
 }
 
 function handleKeyPress(event: KeyboardEvent) {
