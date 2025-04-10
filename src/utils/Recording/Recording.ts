@@ -4,6 +4,8 @@ type RecordingEvent = {
 	key: string;
 };
 
+import type { Note } from "../../types";
+
 class Recording {
 	status: "recording" | "stopped";
 	events: RecordingEvent[];
@@ -36,6 +38,43 @@ class Recording {
 	stop() {
 		this.status = "stopped";
 		this.endedAt = Date.now();
+	}
+
+	notesPlayed(): Note[] {
+		const notes: {
+			key: string;
+			pressedAt: number;
+			releasedAt: number | null;
+		}[] = [];
+
+		const keyPressMap = new Map<string, number>();
+
+		for (const event of this.events) {
+			if (event.type === "pressKey") {
+				keyPressMap.set(event.key, event.timestamp);
+			} else if (event.type === "releaseKey") {
+				const pressedAt = keyPressMap.get(event.key);
+				if (pressedAt !== undefined) {
+					notes.push({
+						key: event.key,
+						pressedAt,
+						releasedAt: event.timestamp,
+					});
+					keyPressMap.delete(event.key);
+				}
+			}
+		}
+
+		// Handle keys that were pressed but not released
+		for (const [key, pressedAt] of keyPressMap.entries()) {
+			notes.push({
+				key,
+				pressedAt,
+				releasedAt: null,
+			});
+		}
+
+		return notes;
 	}
 }
 

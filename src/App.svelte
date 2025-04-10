@@ -2,11 +2,10 @@
 // Dependencies
 import { onDestroy, onMount } from "svelte";
 
+import Timeline from "./components/Timeline.svelte";
 // UI Components
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
 import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
-import Tracks from "./components/tracks/Tracks.svelte";
-// import Timeline from "./components/Timeline.svelte";
 
 // Utils
 import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
@@ -50,7 +49,6 @@ function removeTrack(track: Recording) {
 	tracks = tracks.filter((t) => t !== track);
 }
 
-// This plays the recording
 function play() {
 	if (tracks.length === 0) {
 		console.log("No tracks to play");
@@ -139,6 +137,6 @@ onDestroy(() => {
   {tracks}
 />
 <main>
-  <Tracks tracks={tracks} {pressKey} {releaseKey} {eventEmitter} />
+  <Timeline {tracks} {eventEmitter} {pressKey} {releaseKey} />
   <Keyboard {eventEmitter} />
 </main>

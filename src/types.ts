@@ -6,3 +6,9 @@ export type Key = {
 	shortcut: string;
 	type: KeyType;
 };
+
+export type Note = {
+	key: string;
+	pressedAt: number;
+	releasedAt: number | null;
+};
