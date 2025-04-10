@@ -1,5 +1,5 @@
 <script lang="ts">
-const { enablePlayback, play, isPlaying } = $props();
+const { enablePlayback, isPlaying, onclick } = $props();
 import playIcon from "../assets/icons/play.svg";
 </script>
 
@@ -30,7 +30,7 @@ import playIcon from "../assets/icons/play.svg";
   }
 </style>
 
-<button class="playback" disabled={!enablePlayback || isPlaying} onclick={play}>
+<button class="playback" disabled={!enablePlayback || isPlaying} {onclick}>
   {#if isPlaying}
     ...
   {:else}

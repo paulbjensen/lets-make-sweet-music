@@ -3,7 +3,7 @@ import type Recording from "../../utils/Recording/Recording";
 import PlaybackButton from "../PlaybackButton.svelte";
 import RemoveButton from "../RemoveButton.svelte";
 
-const { tracks, pressKey, releaseKey, removeTrack } = $props();
+const { tracks, pressKey, releaseKey, eventEmitter } = $props();
 
 let currentTrack: Recording | null = $state(null);
 let isPlaying = $state(false);
@@ -81,8 +81,8 @@ function play() {
                 {track.events.length / 2} Notes
             </div>
             <div class="buttons">
-                <PlaybackButton isPlaying={isPlaying && track === currentTrack} play={playWithTrack(track)} {enablePlayback} />
-                <RemoveButton onclick={() => removeTrack(track)} />
+                <PlaybackButton isPlaying={isPlaying && track === currentTrack} onclick={playWithTrack(track)} {enablePlayback} />
+                <RemoveButton onclick={() => eventEmitter.emit("removeTrack", track)} />
             </div>
         </div>
     {/each}

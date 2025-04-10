@@ -1,6 +1,6 @@
 <script lang="ts">
 // Dependencies
-import { onMount } from "svelte";
+import { onDestroy, onMount } from "svelte";
 import type { Key } from "./types";
 
 // UI Components
@@ -9,8 +9,9 @@ import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import Tracks from "./components/tracks/Tracks.svelte";
 // import Timeline from './components/Timeline.svelte';
 
-import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
 // Utils
+import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
+import eventEmitter from "./eventEmitter";
 import Recording from "./utils/Recording/Recording";
 import { Oscillator } from "./utils/analysers/Oscillator";
 
@@ -26,12 +27,6 @@ let tracks: Recording[] = $state([]);
 
 // This keeps a track of the keys that are currently pressed
 let pressedKeys: string[] = $state([]);
-
-const recording = new Recording();
-
-let enablePlayback = $state(false);
-let isPlaying = $state(false);
-
 /* 
     This is a list of keys that are available on the keyboard.
     The keys are divided into two types: upper and lower.
@@ -64,60 +59,40 @@ const keys: Key[] = [
 	{ type: "upper", id: 12, note: "A#3", shortcut: "o" },
 ];
 
+// This is the recording object that will be used to store the events
+// when recording
+const recording = new Recording();
+
 /*
     This function is called when a key is pressed
     It adds the key to the pressedKeys array and plays the sound
     associated with the key.
-  */
+*/
 function pressKey(key: string) {
 	if (!pressedKeys.includes(key)) {
 		pressedKeys = [...pressedKeys, key];
 	}
 	recording.addEvent({ type: "pressKey", key });
 	keyboardSoundBox.playSound(key);
+	// eventEmitter.emit("eeKeyPressed", key);
 }
 
 /*
     This function is called when a key is released
     It removes the key from the pressedKeys array.
-  */
+*/
 function releaseKey(key: string) {
 	recording.addEvent({ type: "releaseKey", key });
 	pressedKeys = pressedKeys.filter((k) => k !== key);
 }
 
-/* When the component mounts, we want to load the sounds for playback */
-onMount(async () => {
-	await keyboardSoundBox.loadSounds();
-});
-
-// Starts the recording
-function startRecording() {
-	recording.start();
-	enablePlayback = false;
-}
-
-/* This saves the recording to the tracks list */
-function saveRecordingToTracks() {
-	const clone = new Recording();
-	clone.events = [...recording.events];
-	clone.startedAt = recording.startedAt;
-	clone.endedAt = recording.endedAt;
-	tracks.push(clone);
-}
-
-// Stops the recording
-function stopRecording() {
-	recording.stop();
-	if (recording.events.length > 0) {
-		saveRecordingToTracks();
-		enablePlayback = true;
-	}
+// Removes a track from the tracks list
+function removeTrack(track: Recording) {
+	tracks = tracks.filter((t) => t !== track);
 }
 
 // This plays the recording
 function play() {
-	isPlaying = true;
 	const hasFinished = new Array(tracks.length).fill(false);
 	for (const track of tracks) {
 		for (const event of track.events) {
@@ -131,7 +106,7 @@ function play() {
 				if (event === track.events[track.events.length - 1]) {
 					hasFinished[tracks.indexOf(track)] = true;
 					if (hasFinished.every((finished) => finished)) {
-						isPlaying = false;
+						eventEmitter.emit("finishPlayingTracks");
 					}
 				}
 			}, delay);
@@ -139,9 +114,43 @@ function play() {
 	}
 }
 
-function removeTrack(track: Recording) {
-	tracks = tracks.filter((t) => t !== track);
+/* This saves the recording to the tracks list */
+function saveRecordingToTracks() {
+	const clone = new Recording();
+	clone.events = [...recording.events];
+	clone.startedAt = recording.startedAt;
+	clone.endedAt = recording.endedAt;
+	tracks.push(clone);
 }
+
+// Starts the recording
+function startRecording() {
+	recording.start();
+}
+
+// Stops the recording
+function stopRecording() {
+	recording.stop();
+	if (recording.events.length > 0) {
+		saveRecordingToTracks();
+	}
+}
+
+/* When the component mounts, we want to load the sounds for playback */
+onMount(async () => {
+	await keyboardSoundBox.loadSounds();
+	eventEmitter.on("removeTrack", (track) => removeTrack(track as Recording));
+	eventEmitter.on("playTracks", play);
+	eventEmitter.on("startRecording", startRecording);
+	eventEmitter.on("stopRecording", stopRecording);
+});
+
+onDestroy(() => {
+	eventEmitter.off("removeTrack", (track) => removeTrack(track as Recording));
+	eventEmitter.off("playTracks", play);
+	eventEmitter.on("startRecording", startRecording);
+	eventEmitter.on("stopRecording", stopRecording);
+});
 </script>
 
 <style>
@@ -155,16 +164,12 @@ function removeTrack(track: Recording) {
 </style>
 
 <NavigationBar
-  {startRecording}
-  {stopRecording}
-  {isPlaying}
-  {play}
-  {enablePlayback}
   analyser={keyboardSoundBox.analyser}
   dataArray={oscillator.dataArray}
   bufferLength={oscillator.bufferLength}
+  {eventEmitter}
 />
 <main>
-  <Tracks tracks={tracks} {pressKey} {releaseKey} {removeTrack} />
+  <Tracks tracks={tracks} {pressKey} {releaseKey} eventEmitter={eventEmitter} />
   <Keyboard keys={keys} {pressKey} {releaseKey} pressedKeys={pressedKeys} />
 </main>

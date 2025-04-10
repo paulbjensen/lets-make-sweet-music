@@ -1,4 +1,5 @@
 <script lang="ts">
+import { onDestroy, onMount } from "svelte";
 /*
         This is the navigation bar component that will contain the following:
 
@@ -16,18 +17,39 @@ import PlaybackButton from "../PlaybackButton.svelte";
 import RecordButton from "../RecordButton.svelte";
 
 /*
-        NOTE - This is a bit of horrible props drilling that I will get around to removing later,
-    */
-const {
-	startRecording,
-	stopRecording,
-	isPlaying,
-	play,
-	enablePlayback,
-	analyser,
-	dataArray,
-	bufferLength,
-} = $props();
+    NOTE - This is a bit of horrible props drilling that I will get around to removing later,
+*/
+const { analyser, dataArray, bufferLength, eventEmitter } = $props();
+
+let enablePlayback = $state(false);
+let isPlaying = $state(false);
+
+function finishPlayingTracks() {
+	isPlaying = false;
+}
+
+function playTracks() {
+	isPlaying = true;
+	eventEmitter.emit("playTracks");
+}
+
+function startRecording() {
+	eventEmitter.emit("startRecording");
+	enablePlayback = false;
+}
+
+function stopRecording() {
+	eventEmitter.emit("stopRecording");
+	enablePlayback = true;
+}
+
+onMount(() => {
+	eventEmitter.on("finishPlayingTracks", finishPlayingTracks);
+});
+
+onDestroy(() => {
+	eventEmitter.off("finishPlayingTracks", finishPlayingTracks);
+});
 </script>
 
 <style>
@@ -62,7 +84,7 @@ const {
     </div>
     <div id="right-section">
         <RecordButton {startRecording} {stopRecording} />
-        <PlaybackButton {isPlaying} {play} {enablePlayback} />
+        <PlaybackButton {isPlaying} onclick={playTracks} {enablePlayback} />
         <Oscilloscope
             analyser={analyser}
             dataArray={dataArray}
