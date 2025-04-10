@@ -16,11 +16,16 @@ export class SoundBox {
 	keyToFile: Record<string, string>;
 	source: AudioBufferSourceNode | null = null;
 	analyser?: AnalyserNode;
+	burnToCD: MediaStreamAudioDestinationNode;
+	cd?: MediaRecorder;
+	isBurning: boolean;
 
 	constructor(initialKeyToFile: Record<string, string>) {
 		this.audioContext = new AudioContext();
 		this.soundBuffers = {};
 		this.keyToFile = initialKeyToFile;
+		this.burnToCD = this.audioContext.createMediaStreamDestination();
+		this.isBurning = false;
 	}
 
 	async loadSounds() {
@@ -49,7 +54,52 @@ export class SoundBox {
 				// If the analyser is not set up, just connect to the destination
 				this.source.connect(this.audioContext.destination);
 			}
+			if (this.cd && this.isBurning) {
+				this.source.connect(this.burnToCD);
+			}
 			this.source.start();
 		}
+	}
+
+	/*
+		Can't believe this worked. Amazing!
+
+		Now, the trick is to make it work seamlessly, so that you can burn the 
+		music file with one click and have it automatically stop recording when
+		it is finished.
+
+		I think that this could be achieved through coordinating some events to 
+		trigger the start of recording, then playing the tracks, then when the 
+		track has finished playing, wait a few seconds then stop the recording.
+
+		For now I want to save the code at this commit stage, then I will do 
+		the tweaks afterwards.
+	*/
+	startBurning() {
+		this.isBurning = true;
+		this.cd = new MediaRecorder(this.burnToCD.stream);
+		const chunks: BlobPart[] = [];
+
+		this.cd.ondataavailable = (e) => {
+			chunks.push(e.data);
+		};
+
+		this.cd.onstop = () => {
+			const blob = new Blob(chunks, { type: "audio/ogg" });
+			const url = URL.createObjectURL(blob);
+
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "recording.ogg";
+			a.click();
+		};
+
+		// Start recording
+		this.cd.start();
+	}
+
+	stopBurning() {
+		this.cd?.stop();
+		this.isBurning = false;
 	}
 }

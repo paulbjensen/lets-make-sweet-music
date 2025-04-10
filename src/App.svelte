@@ -139,4 +139,7 @@ onDestroy(() => {
 <main>
   <Timeline {tracks} {eventEmitter} {pressKey} {releaseKey} />
   <Keyboard {eventEmitter} />
+  <button onclick={() => keyboardSoundBox.startBurning()}>Start burning</button>
+  <button onclick={() => keyboardSoundBox.stopBurning()}>Stop burning</button>
+
 </main>
