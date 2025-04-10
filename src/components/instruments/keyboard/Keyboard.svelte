@@ -8,12 +8,6 @@ import KeyboardKey from "./KeyboardKey.svelte";
 const filterForKeyType = (type: KeyType) => (key: Key) => key.type === type;
 let pressedKeys: string[] = $state([]);
 
-// Potential refactoring of html
-// const keySet = [
-//     { class: 'lower-keys', type: 'lower' },
-//     { class: 'upper-keys', type: 'upper' }
-// ];
-
 /* 
     This is a list of keys that are available on the keyboard.
     The keys are divided into two types: upper and lower.
@@ -136,32 +130,23 @@ onDestroy(() => {
 
 <div class="keyboard">
     <div class="keys">
-        <div class="lower-keys">
-            {#each keys.filter(filterForKeyType('lower')) as key}
-                <KeyboardKey
-                    keyClass="lower-key"
-                    pressed={pressedKeys.includes(key.note)}
-                    onmousedown={() => { pressKey(key.note);}}
-                    onmouseup={() => { releaseKey(key.note);}}
-                    id={key.id}
-                    shortcut={key.shortcut}
-                    note={key.note}
-                />
-            {/each}
-        </div>
-        <div class="upper-keys">
-            {#each keys.filter(filterForKeyType('upper')) as key}
-                <KeyboardKey
-                    keyClass="upper-key"
-                    pressed={pressedKeys.includes(key.note)}
-                    onmousedown={() => { pressKey(key.note);}}
-                    onmouseup={() => { releaseKey(key.note);}}
-                    id={key.id}
-                    shortcut={key.shortcut}
-                    note={key.note}
-                />
-            {/each}
-        </div>
+        {#snippet keysOnKeyboard(containerClass, type, keyClass)}        
+            <div class={containerClass}>
+                {#each keys.filter(filterForKeyType(type)) as key}
+                    <KeyboardKey
+                        {keyClass}
+                        pressed={pressedKeys.includes(key.note)}
+                        onmousedown={() => { pressKey(key.note);}}
+                        onmouseup={() => { releaseKey(key.note);}}
+                        id={key.id}
+                        shortcut={key.shortcut}
+                        note={key.note}
+                    />
+                {/each}
+            </div>
+        {/snippet}
+        {@render keysOnKeyboard('lower-keys', 'lower', 'lower-key')}
+        {@render keysOnKeyboard('upper-keys', 'upper', 'upper-key')}
     </div>
     <div class="keyboard-top-case"></div>
 </div>
