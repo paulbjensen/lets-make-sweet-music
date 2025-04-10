@@ -48,7 +48,13 @@ function stopRecording() {
     and if there are no tracks, it will disable the playback button.
 */
 function checkIfPlayShouldBeEnabled() {
-	enablePlayback = tracks.length > 0;
+	// I think that this is executing faster than the event emitter updated
+	// True - it is, a shame. Will keep this for now to remind me that
+	// eventemitters are independent in execution order, or that to guarantee
+	// an order of events, you may have to chain events together.
+	setTimeout(() => {
+		enablePlayback = tracks.length > 0;
+	}, 10);
 }
 
 onMount(() => {

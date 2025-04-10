@@ -6,6 +6,7 @@ import { onDestroy, onMount } from "svelte";
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
 import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import Tracks from "./components/tracks/Tracks.svelte";
+// import Timeline from "./components/Timeline.svelte";
 
 // Utils
 import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
@@ -20,19 +21,17 @@ const oscillator = new Oscillator({
 });
 keyboardSoundBox.analyser = oscillator.analyser;
 
-/*
+// States
 
-  This is used to store tracks
-
-  NOTE - this could be extracted to a stores folder,
-  and then referenced in places where it is needed
-
-*/
 let tracks: Recording[] = $state([]);
+
+// Configuration
 
 // This is the recording object that will be used to store the events
 // when recording
 const recording = new Recording();
+
+// Actions
 
 function pressKey(key: string) {
 	recording.addEvent({ type: "pressKey", key });
@@ -128,6 +127,7 @@ onDestroy(() => {
     align-items: center;
     justify-content: center;
     gap: 20px;
+    padding: 10px;
   }
 </style>
 
