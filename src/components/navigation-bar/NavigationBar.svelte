@@ -19,7 +19,7 @@ import RecordButton from "../RecordButton.svelte";
 /*
     NOTE - This is a bit of horrible props drilling that I will get around to removing later,
 */
-const { analyser, dataArray, bufferLength, eventEmitter } = $props();
+const { analyser, dataArray, bufferLength, eventEmitter, tracks } = $props();
 
 let enablePlayback = $state(false);
 let isPlaying = $state(false);
@@ -43,12 +43,22 @@ function stopRecording() {
 	enablePlayback = true;
 }
 
+/*
+    This will look at the number of tracks that are in the tracks array
+    and if there are no tracks, it will disable the playback button.
+*/
+function checkIfPlayShouldBeEnabled () {
+    enablePlayback = tracks.length > 0;
+}
+
 onMount(() => {
 	eventEmitter.on("finishPlayingTracks", finishPlayingTracks);
+    eventEmitter.on('removeTrack', checkIfPlayShouldBeEnabled);
 });
 
 onDestroy(() => {
 	eventEmitter.off("finishPlayingTracks", finishPlayingTracks);
+    eventEmitter.off('removeTrack', checkIfPlayShouldBeEnabled);
 });
 </script>
 

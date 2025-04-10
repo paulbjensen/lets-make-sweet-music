@@ -1,13 +1,11 @@
 <script lang="ts">
 // Dependencies
 import { onDestroy, onMount } from "svelte";
-import type { Key } from "./types";
 
 // UI Components
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
 import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import Tracks from "./components/tracks/Tracks.svelte";
-// import Timeline from './components/Timeline.svelte';
 
 // Utils
 import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
@@ -22,7 +20,14 @@ const oscillator = new Oscillator({
 });
 keyboardSoundBox.analyser = oscillator.analyser;
 
-/* This is used to store tracks */
+/*
+
+  This is used to store tracks
+
+  NOTE - this could be extracted to a stores folder,
+  and then referenced in places where it is needed
+
+*/
 let tracks: Recording[] = $state([]);
 
 // This is the recording object that will be used to store the events
@@ -51,11 +56,6 @@ function play() {
 	if (tracks.length === 0) {
 		console.log("No tracks to play");
 		eventEmitter.emit("finishPlayingTracks");
-		/* 
-      TODO - when there are no tracks left, we should set 
-      enablePlayback in the navigation bar component 
-      to false.
-    */
 	}
 	const hasFinished = new Array(tracks.length).fill(false);
 	for (const track of tracks) {
@@ -136,6 +136,7 @@ onDestroy(() => {
   dataArray={oscillator.dataArray}
   bufferLength={oscillator.bufferLength}
   {eventEmitter}
+  {tracks}
 />
 <main>
   <Tracks tracks={tracks} {pressKey} {releaseKey} {eventEmitter} />
