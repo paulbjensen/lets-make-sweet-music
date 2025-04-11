@@ -1,16 +1,23 @@
 <script lang="ts">
-import { onDestroy, onMount } from "svelte";
+// Dependencies
 import type { Note } from "../types";
 import type Recording from "../utils/Recording/Recording";
 import PlaybackButton from "./buttons/PlaybackButton.svelte";
 import RemoveButton from "./buttons/RemoveButton.svelte";
 
+// Props
 const { track, number, eventEmitter, pressKey, releaseKey } = $props();
 
+// States
 let currentTrack: Recording | null = $state(null);
 let isPlaying = $state(false);
 const enablePlayback = $state(true);
 
+/*
+    This function calculates the length of the clip based on the
+    startedAt and endedAt properties of the track. If either of them
+    is not set, it returns a default value of 100px.
+*/
 function calculateClipLength(track: Recording) {
 	if (!track.startedAt || !track.endedAt) {
 		return "100px";
@@ -19,17 +26,22 @@ function calculateClipLength(track: Recording) {
 	return `${clipLength}px`;
 }
 
-onMount(() => {});
-
-onDestroy(() => {});
-
+/*
+    This function calculates the left position of the note based on
+    the pressedAt property of the note. It returns a string with the
+    value in pixels.
+*/
 function calculateNoteLeft(note: Note) {
 	const left = note.pressedAt / 10;
 	return `${left}px`;
 }
 
+/*
+    This function calculates the width of the note based on the
+    releasedAt and pressedAt properties of the note. If either of them
+    is not set, it returns a default value of 2px.
+*/
 function calculateNoteWidth(note: Note) {
-	$inspect(note);
 	if (!note.releasedAt || !note.pressedAt) {
 		return "2px";
 	}
@@ -37,6 +49,10 @@ function calculateNoteWidth(note: Note) {
 	return `${width}px`;
 }
 
+/*
+    This will play a single track, which is good to reviewing the track in 
+    isolation from the other tracks that make up the song.
+*/
 function playWithTrack(track: Recording) {
 	return () => {
 		currentTrack = track;
@@ -44,12 +60,37 @@ function playWithTrack(track: Recording) {
 	};
 }
 
+/*
+    This plays the track.
+
+    I think that this needs to emit some events to the event emitter to signal 
+    when it has started playing, and when it has finished playing, so that:
+
+    - The timer can start
+    - The marker can move along
+    - We can disable buttons that we don't want to be pressed while the track is playing, like remove or record or download or play all tracks
+
+    - emit event "playTrack" when starting
+    - emit event "finishPlayingTrack" when finished
+
+    Step one - see that this works fine
+    Step two - add listeners in the track to disable the buttons when 
+*/
 function play() {
 	if (!currentTrack) {
 		console.error("No track selected");
 		return;
 	}
+	eventEmitter.emit("playTrack", currentTrack);
 	isPlaying = true;
+	const duration =
+		currentTrack.endedAt && currentTrack.startedAt
+			? currentTrack.endedAt - currentTrack.startedAt
+			: currentTrack.events[currentTrack.events.length - 1].timestamp;
+	setTimeout(() => {
+		eventEmitter.emit("finishPlayingTrack", currentTrack);
+		isPlaying = false;
+	}, duration);
 	for (const event of currentTrack.events) {
 		const delay = event.timestamp;
 		setTimeout(() => {
@@ -57,9 +98,6 @@ function play() {
 				pressKey(event.key);
 			} else if (event.type === "releaseKey") {
 				releaseKey(event.key);
-			}
-			if (event === currentTrack?.events[currentTrack?.events.length - 1]) {
-				isPlaying = false;
 			}
 		}, delay);
 	}
@@ -125,6 +163,6 @@ function play() {
     </div>
     <div class="track-options">
         <PlaybackButton isPlaying={isPlaying && track === currentTrack} onclick={playWithTrack(track)} {enablePlayback} />
-        <RemoveButton onclick={() => eventEmitter.emit("removeTrack", track)} />
+        <RemoveButton onclick={() => eventEmitter.emit("removeTrack", track)} disabled={isPlaying} />
     </div>
 </div>

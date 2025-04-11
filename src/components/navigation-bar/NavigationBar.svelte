@@ -68,13 +68,22 @@ function startBurning() {
 	eventEmitter.emit("startBurning");
 }
 
+function whenTrackIsPlayed() {
+	isPlaying = true;
+	enablePlayback = false;
+}
+
 onMount(() => {
+	eventEmitter.on("playTrack", whenTrackIsPlayed);
 	eventEmitter.on("finishPlayingTracks", finishPlayingTracks);
+	eventEmitter.on("finishPlayingTrack", finishPlayingTracks);
 	eventEmitter.on("removeTrack", checkIfPlayShouldBeEnabled);
 });
 
 onDestroy(() => {
+	eventEmitter.off("playTrack", whenTrackIsPlayed);
 	eventEmitter.off("finishPlayingTracks", finishPlayingTracks);
+	eventEmitter.off("finishPlayingTrack", finishPlayingTracks);
 	eventEmitter.off("removeTrack", checkIfPlayShouldBeEnabled);
 });
 </script>

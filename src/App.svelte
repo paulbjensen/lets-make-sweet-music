@@ -54,7 +54,16 @@ function play() {
 		console.log("No tracks to play");
 		eventEmitter.emit("finishPlayingTracks");
 	}
-	const hasFinished = new Array(tracks.length).fill(false);
+	const durations = tracks.map((track) => {
+		return track.endedAt && track.startedAt
+			? track.endedAt - track.startedAt
+			: track.events[track.events.length - 1].timestamp;
+	});
+	const duration = Math.max(...durations);
+	setTimeout(() => {
+		eventEmitter.emit("finishPlayingTracks");
+	}, duration);
+
 	for (const track of tracks) {
 		for (const event of track.events) {
 			const delay = event.timestamp;
@@ -63,12 +72,6 @@ function play() {
 					pressKey(event.key);
 				} else if (event.type === "releaseKey") {
 					releaseKey(event.key);
-				}
-				if (event === track.events[track.events.length - 1]) {
-					hasFinished[tracks.indexOf(track)] = true;
-					if (hasFinished.every((finished) => finished)) {
-						eventEmitter.emit("finishPlayingTracks");
-					}
 				}
 			}, delay);
 		}
@@ -97,17 +100,30 @@ function stopRecording() {
 	}
 }
 
+/*
+	NOTE
+
+	One of the things I've noticed when burning the tracks is that the length 
+	of the track is shorter than the recording time on the tracks, as if it 
+	is trimming empty space at the start and end of the tracks. 
+
+	This is worth investigating, as it ends up producing a clipped version of 
+	what is being displayed in the timeline, and as a musician you might want
+	the song to have a bit of space at the start and end of the track.
+*/
 function startBurning() {
 	keyboardSoundBox.startBurning();
 	eventEmitter.emit("playTracks");
 }
 
+/*
+	This will stop burning the track (burning is a reference to when you'd 
+	burn tracks onto CDs back in the day).
+*/
 function stopBurning() {
-	setTimeout(() => {
-		if (keyboardSoundBox.isBurning) {
-			keyboardSoundBox.stopBurning();
-		}
-	}, 3000); // We wait 3 seconds in case any sounds are still playing after the last keypress, like my waaaaaa!
+	if (keyboardSoundBox.isBurning) {
+		keyboardSoundBox.stopBurning();
+	}
 }
 
 /* When the component mounts, we want to load the sounds for playback */

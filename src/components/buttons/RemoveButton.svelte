@@ -1,7 +1,7 @@
 <script lang="ts">
 import removeIcon from "../../assets/icons/remove.svg";
 
-const { onclick } = $props();
+const { onclick, disabled } = $props();
 </script>
 
 <style>
@@ -24,8 +24,14 @@ const { onclick } = $props();
     .remove-button > img {
         pointer-events: none;
     }
+
+    .remove-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.1;
+    }
+
 </style>
 
-<button class="remove-button" onclick={onclick}>
+<button class="remove-button" onclick={onclick} {disabled}>
     <img src={removeIcon} alt="Remove Track" width="24" height="24" />
-</button>   
+</button>

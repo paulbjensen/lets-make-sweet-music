@@ -22,11 +22,15 @@ function moveMarkerToStart() {
 onMount(() => {
 	eventEmitter.on("playTracks", moveMarker);
 	eventEmitter.on("finishPlayingTracks", moveMarkerToStart);
+	eventEmitter.on("playTrack", moveMarker);
+	eventEmitter.on("finishPlayingTrack", moveMarkerToStart);
 });
 
 onDestroy(() => {
 	eventEmitter.off("playTracks", moveMarker);
-	eventEmitter.off("finishPlayingTracks", moveMarkerToStart);
+	eventEmitter.off("finishPlayingTrack", moveMarkerToStart);
+	eventEmitter.off("playTracks", moveMarker);
+	eventEmitter.off("finishPlayingTrack", moveMarkerToStart);
 });
 </script>
 
