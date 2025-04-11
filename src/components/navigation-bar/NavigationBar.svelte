@@ -27,6 +27,7 @@ let isPlaying = $state(false);
 
 function finishPlayingTracks() {
 	isPlaying = false;
+	enablePlayback = true;
 }
 
 function playTracks() {
