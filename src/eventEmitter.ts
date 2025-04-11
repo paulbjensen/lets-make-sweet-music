@@ -23,4 +23,7 @@ import EventEmitter from "./utils/EventEmitter/EventEmitter";
 
 const eventEmitter = new EventEmitter();
 
+// Set this flag to true to enable logging
+// eventEmitter.enableLogging = true;
+
 export default eventEmitter;

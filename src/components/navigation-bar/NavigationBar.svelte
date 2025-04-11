@@ -13,6 +13,7 @@ import { onDestroy, onMount } from "svelte";
 
 import Logo from "../Logo.svelte";
 import Oscilloscope from "../Oscilloscope.svelte";
+import Timer from "../Timer.svelte";
 import DownloadButton from "../buttons/DownloadButton.svelte";
 import PlaybackButton from "../buttons/PlaybackButton.svelte";
 import RecordButton from "../buttons/RecordButton.svelte";
@@ -103,6 +104,7 @@ onDestroy(() => {
 <div id="navigation-bar">
     <Logo width={145} height={44} />
     <div id="middle-section">
+        <Timer {eventEmitter} />
     </div>
     <div id="right-section">
         <DownloadButton onclick={startBurning} />
