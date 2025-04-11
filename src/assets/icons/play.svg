@@ -1,3 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="white">
-    <polygon points="10,5 25,15 10,25" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="37px" height="48px" viewBox="0 0 37 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Triangle</title>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#6DD400" offset="0%"></stop>
+            <stop stop-color="#83FF00" offset="99.7650787%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0.234921329%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#6DD400" offset="0%"></stop>
+            <stop stop-color="#83FF00" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Desktop-design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+        <g id="Extra-Large-Copy-2" transform="translate(-1367, -280)" fill="url(#linearGradient-1)" stroke="url(#linearGradient-2)" stroke-width="2">
+            <path d="M1385.47012,285.719129 L1409.24363,321.528788 L1361.75908,321.528788 L1385.47012,285.719129 Z" id="Triangle" transform="translate(1385.5, 304.0288) rotate(90) translate(-1385.5, -304.0288)"></path>
+        </g>
+    </g>
 </svg>

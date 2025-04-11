@@ -1,5 +1,5 @@
 <script lang="ts">
-import removeIcon from "../assets/icons/remove.svg";
+import removeIcon from "../../assets/icons/remove.svg";
 
 const { onclick } = $props();
 </script>

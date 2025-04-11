@@ -13,8 +13,9 @@ import { onDestroy, onMount } from "svelte";
 
 import Logo from "../Logo.svelte";
 import Oscilloscope from "../Oscilloscope.svelte";
-import PlaybackButton from "../PlaybackButton.svelte";
-import RecordButton from "../RecordButton.svelte";
+import DownloadButton from "../buttons/DownloadButton.svelte";
+import PlaybackButton from "../buttons/PlaybackButton.svelte";
+import RecordButton from "../buttons/RecordButton.svelte";
 
 /*
     NOTE - This is a bit of horrible props drilling that I will get around to removing later,
@@ -96,23 +97,6 @@ onDestroy(() => {
     #navigation-bar > div:last-child {
         justify-content: flex-end;
     }
-
-    .burn-button {
-        background: linear-gradient(0deg, rgb(215, 88, 14) 0%, rgb(255, 204, 0) 100%);
-        border: none;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-        border-radius: 5px;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5), inset 0px 0px 4px rgba(255, 255, 255, 0.5);
-
-    }
 </style>
 
 <div id="navigation-bar">
@@ -120,7 +104,7 @@ onDestroy(() => {
     <div id="middle-section">
     </div>
     <div id="right-section">
-        <button class="burn-button" onclick={startBurning} aria-label="Save track to your computer">💿</button>
+        <DownloadButton onclick={startBurning} />
         <RecordButton {startRecording} {stopRecording} />
         <PlaybackButton {isPlaying} onclick={playTracks} {enablePlayback} />
         <Oscilloscope

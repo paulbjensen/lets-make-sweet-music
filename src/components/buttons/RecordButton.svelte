@@ -1,6 +1,6 @@
 <script lang="ts">
-import recordIcon from "../assets/icons/record.svg";
-import stopIcon from "../assets/icons/stop.svg";
+import recordIcon from "../../assets/icons/record.svg";
+import stopIcon from "../../assets/icons/stop.svg";
 
 let recording = $state(false);
 const { startRecording, stopRecording } = $props();
@@ -18,19 +18,15 @@ const toggleRecording = () => {
 
 <style>
     .record-button {
-        background: linear-gradient(180deg, #E02020 0%, #ff2f2c 100%);
+        background: none;
         border: none;
-        color: white;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: 40px;
         width: 40px;
         height: 40px;
         cursor: pointer;
-        border-radius: 4px;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5), inset 0px 0px 4px rgba(255, 255, 255, 0.5);
     }
 
     .record-button > img {

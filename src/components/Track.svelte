@@ -2,8 +2,8 @@
 import { onDestroy, onMount } from "svelte";
 import type { Note } from "../types";
 import type Recording from "../utils/Recording/Recording";
-import PlaybackButton from "./PlaybackButton.svelte";
-import RemoveButton from "./RemoveButton.svelte";
+import PlaybackButton from "./buttons/PlaybackButton.svelte";
+import RemoveButton from "./buttons/RemoveButton.svelte";
 
 const { track, number, eventEmitter, pressKey, releaseKey } = $props();
 
