@@ -58,7 +58,7 @@ function releaseKey(note: string) {
 	eventEmitter.emit("releaseKey", note);
 }
 
-function handleKeyPress(event: KeyboardEvent) {
+function handleKeyDown(event: KeyboardEvent) {
 	const note = keys.find((key: Key) => key.shortcut === event.key)?.note;
 	if (!note) return;
 	pressKey(note);
@@ -75,13 +75,13 @@ function handleKeyUp(event: KeyboardEvent) {
 
 onMount(() => {
 	/* bindings for keyboard actions */
-	window.addEventListener("keypress", handleKeyPress);
+	window.addEventListener("keydown", handleKeyDown);
 	window.addEventListener("keyup", handleKeyUp);
 });
 
 /* When the component is destroyed, we want to remove the event listeners */
 onDestroy(() => {
-	window.removeEventListener("keypress", handleKeyPress);
+	window.removeEventListener("keydown", handleKeyDown);
 	window.removeEventListener("keyup", handleKeyUp);
 });
 </script>
