@@ -107,7 +107,6 @@ function play() {
         width: fit-content;
         height: 100%;
     }
-
 </style>
 
 <div class="track">

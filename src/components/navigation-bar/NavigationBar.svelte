@@ -108,7 +108,7 @@ onDestroy(() => {
 <div id="navigation-bar">
     <Logo width={145} height={44} />
     <div id="middle-section">
-        <DownloadButton onclick={startBurning} />
+        <DownloadButton enabled={enablePlayback} onclick={startBurning} />
         <PlaybackButton {isPlaying} onclick={playTracks} {enablePlayback} />
         <RecordButton {startRecording} {stopRecording} />
         <Timer {eventEmitter} />

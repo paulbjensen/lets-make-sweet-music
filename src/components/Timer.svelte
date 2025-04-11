@@ -58,6 +58,7 @@ onDestroy(() => {
         height: 50px;
         background-color: #262626;
         border-radius: 4px;
+		box-shadow: inset 0px 1px 4px rgba(0,0,0,0.5);
     }
 
     .current-time {

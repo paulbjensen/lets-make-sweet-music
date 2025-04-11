@@ -1,5 +1,5 @@
 <script lang="ts">
-const { onclick } = $props();
+const { onclick, enabled } = $props();
 import downloadIcon from "../../assets/icons/download.svg";
 </script>
 
@@ -14,9 +14,14 @@ import downloadIcon from "../../assets/icons/download.svg";
         cursor: pointer;
         background: none;
         border: none;
+        opacity: 1;
+    }
+
+    .download-button:disabled {
+        opacity: 0.1;
     }
 </style>
 
-<button class="download-button" onclick={onclick} aria-label="Save track to your computer">
+<button class="download-button" disabled={!enabled} onclick={onclick} aria-label="Save track to your computer">
     <img src={downloadIcon} alt="Download" width="24" height="24" />
 </button>

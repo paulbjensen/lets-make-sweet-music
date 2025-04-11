@@ -2,6 +2,8 @@
 
 Nothing beats a little TODO list in Markdown.
 
+- [x] Disable the download button when recording is happening, and when no tracks exist
+
 ## Timeline
 
 - [ ] Add scrolling support for the timeline
