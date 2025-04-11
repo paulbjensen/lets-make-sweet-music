@@ -3,7 +3,7 @@ import recordIcon from "../../assets/icons/record.svg";
 import stopIcon from "../../assets/icons/stop.svg";
 
 let recording = $state(false);
-const { startRecording, stopRecording } = $props();
+const { startRecording, stopRecording, enabled } = $props();
 
 const toggleRecording = () => {
 	if (recording) {
@@ -32,9 +32,14 @@ const toggleRecording = () => {
     .record-button > img {
         pointer-events: none;
     }
+
+    .record-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.1;
+    }
 </style>
 
-<button class="record-button" onclick={toggleRecording}>
+<button class="record-button" onclick={toggleRecording} disabled={!enabled}>
   {#if recording}
     <img src={stopIcon} alt="Stop" width="24" height="24" />
   {:else}
