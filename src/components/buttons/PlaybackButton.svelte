@@ -17,6 +17,8 @@ import playIcon from "../../assets/icons/play.svg";
   }
 
   .playback > img {
+    width: 24px;
+    height: 24px;
     pointer-events: none;
   }
 
@@ -26,5 +28,5 @@ import playIcon from "../../assets/icons/play.svg";
 </style>
 
 <button class="playback" disabled={!enablePlayback || isPlaying} {onclick}>
-    <img src={playIcon} alt="Play" width="32" height="32" />
+    <img src={playIcon} alt="Play" width="24" height="24" />
 </button>
