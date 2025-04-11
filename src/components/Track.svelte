@@ -1,5 +1,6 @@
 <script lang="ts">
 // Dependencies
+import { onDestroy, onMount } from "svelte";
 import type { Note } from "../types";
 import type Recording from "../utils/Recording/Recording";
 import PlaybackButton from "./buttons/PlaybackButton.svelte";
@@ -11,7 +12,7 @@ const { track, number, eventEmitter, pressKey, releaseKey } = $props();
 // States
 let currentTrack: Recording | null = $state(null);
 let isPlaying = $state(false);
-const enablePlayback = $state(true);
+let enablePlayback = $state(true);
 
 /*
     This function calculates the length of the clip based on the
@@ -102,6 +103,29 @@ function play() {
 		}, delay);
 	}
 }
+
+/*
+    If any track is playing, we want to disable the playback button on other 
+    tracks, so that users can't trigger a bug of trying to play two tracks 
+    at the same time.
+*/
+function lockPlayback() {
+	enablePlayback = false;
+}
+
+function unlockPlayback() {
+	enablePlayback = true;
+}
+
+onMount(() => {
+	eventEmitter.on("playTrack", lockPlayback);
+	eventEmitter.on("finishPlayingTrack", unlockPlayback);
+});
+
+onDestroy(() => {
+	eventEmitter.off("playTrack", lockPlayback);
+	eventEmitter.off("finishPlayingTrack", unlockPlayback);
+});
 </script>
 
 <style>
