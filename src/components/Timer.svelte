@@ -54,16 +54,16 @@ onDestroy(() => {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 120px;
+        width: 160px;
         height: 50px;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: #262626;
         border-radius: 4px;
     }
 
     .current-time {
         font-family: 'Courier New', Courier, monospace;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 24px;
         color: white;
     }
 </style>

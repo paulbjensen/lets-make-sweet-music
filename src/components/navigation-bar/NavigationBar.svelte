@@ -13,6 +13,7 @@ import { onDestroy, onMount } from "svelte";
 
 import Logo from "../Logo.svelte";
 import Oscilloscope from "../Oscilloscope.svelte";
+import RecordingSign from "../RecordingSign.svelte";
 import Timer from "../Timer.svelte";
 import DownloadButton from "../buttons/DownloadButton.svelte";
 import PlaybackButton from "../buttons/PlaybackButton.svelte";
@@ -25,6 +26,7 @@ const { analyser, dataArray, bufferLength, eventEmitter, tracks } = $props();
 
 let enablePlayback = $state(false);
 let isPlaying = $state(false);
+let recordingSignEnabled = $state(false);
 
 function finishPlayingTracks() {
 	isPlaying = false;
@@ -39,11 +41,13 @@ function playTracks() {
 function startRecording() {
 	eventEmitter.emit("startRecording");
 	enablePlayback = false;
+	recordingSignEnabled = true;
 }
 
 function stopRecording() {
 	eventEmitter.emit("stopRecording");
 	enablePlayback = true;
+	recordingSignEnabled = false;
 }
 
 /*
@@ -107,6 +111,7 @@ onDestroy(() => {
         <Timer {eventEmitter} />
     </div>
     <div id="right-section">
+        <RecordingSign enabled={recordingSignEnabled} />
         <DownloadButton onclick={startBurning} />
         <RecordButton {startRecording} {stopRecording} />
         <PlaybackButton {isPlaying} onclick={playTracks} {enablePlayback} />
