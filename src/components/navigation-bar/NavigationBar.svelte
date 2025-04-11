@@ -82,7 +82,7 @@ onDestroy(() => {
 <style>
     #navigation-bar {
         display: grid;
-        grid-template-columns: 180px auto 360px;
+        grid-template-columns: auto auto auto;
         gap: 20px;
         background: #333;
         padding: 10px;
@@ -108,13 +108,13 @@ onDestroy(() => {
 <div id="navigation-bar">
     <Logo width={145} height={44} />
     <div id="middle-section">
+        <DownloadButton onclick={startBurning} />
+        <PlaybackButton {isPlaying} onclick={playTracks} {enablePlayback} />
+        <RecordButton {startRecording} {stopRecording} />
         <Timer {eventEmitter} />
     </div>
     <div id="right-section">
         <RecordingSign enabled={recordingSignEnabled} />
-        <DownloadButton onclick={startBurning} />
-        <RecordButton {startRecording} {stopRecording} />
-        <PlaybackButton {isPlaying} onclick={playTracks} {enablePlayback} />
         <Oscilloscope
             analyser={analyser}
             dataArray={dataArray}
