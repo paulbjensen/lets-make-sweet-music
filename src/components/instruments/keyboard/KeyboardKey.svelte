@@ -1,6 +1,15 @@
 <script lang="ts">
-const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
-	$props();
+const {
+	keyClass,
+	pressed,
+	onmousedown,
+	onmouseup,
+	id,
+	shortcut,
+	note,
+	showNote,
+	showShortcut,
+} = $props();
 </script>
 
 <style>
@@ -74,9 +83,17 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
     }
 
     .key-shortcut {
-        font-size: 18px;
-        color: #aeaeae;
+        margin-top: 4px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
         text-transform: uppercase;
+        padding: 4px 6px;
+        border-radius: 4px;
+        color: #aeaeae;
+        border: solid 1px #c9c9c9;
+        text-transform: uppercase;
+        box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.1);
     }
 
     .upper-key .key-note {
@@ -84,8 +101,9 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
         color: white;
     }
     .upper-key .key-shortcut {
-        font-size: 12px;
-        color: #ccc;
+        font-size: 10px;
+        color: #aeaeae;
+        border: solid 1px #c9c9c9;
     }
 
     .lower-key:hover, .upper-key:hover {
@@ -104,10 +122,14 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
     {onmouseup}
     data-id={id}
 >
-    <div class="key-note">
-        {note}
-    </div>
-    <div class="key-shortcut">
-        {shortcut}
-    </div>
+    {#if showNote}
+        <div class="key-note">
+            {note}
+        </div>
+    {/if}
+    {#if showShortcut}
+        <div class="key-shortcut">
+            {shortcut}
+        </div>
+    {/if}
 </button>

@@ -128,6 +128,8 @@ onDestroy(() => {
                         id={key.id}
                         shortcut={key.shortcut}
                         note={key.note}
+                        showNote={false}
+                        showShortcut={true}
                     />
                 {/each}
             </div>
