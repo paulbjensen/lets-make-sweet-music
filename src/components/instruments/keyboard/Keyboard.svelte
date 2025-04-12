@@ -90,8 +90,8 @@ onDestroy(() => {
     .keyboard {
         position: relative;
         padding: 10px;
-        background-color: rgb(200, 136, 59);
-        border-radius: 5px;
+        background-color: rgb(0, 0, 0);
+        border-radius: 8px;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
         width: intrinsic;
     }
@@ -99,12 +99,11 @@ onDestroy(() => {
     .lower-keys {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 20px;
     }
 
     .upper-keys {
         position: absolute;
-        top: 20px;
+        top: 0px;
         display: grid;
         grid-template-columns: auto auto auto auto auto;
     }
@@ -113,24 +112,11 @@ onDestroy(() => {
         position: relative;
     }
 
-    .keyboard-top-case {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        right: 0px;
-        height: 40px;
-        background-color: rgb(200, 136, 59);
-        border-radius: 5px 5px 0 0;
-        box-shadow: 0px 8px 2px rgba(0, 0, 0, 0.5);
-        background-color: rgb(200, 136, 59);
-        z-index: 3;
-    }
-
 </style>
 
 <div class="keyboard">
     <div class="keys">
-        {#snippet keysOnKeyboard(containerClass, type, keyClass)}        
+        {#snippet keysOnKeyboard(containerClass:string, type:string, keyClass:string)}        
             <div class={containerClass}>
                 {#each keys.filter(filterForKeyType(type)) as key}
                     <KeyboardKey
@@ -148,5 +134,4 @@ onDestroy(() => {
         {@render keysOnKeyboard('lower-keys', 'lower', 'lower-key')}
         {@render keysOnKeyboard('upper-keys', 'upper', 'upper-key')}
     </div>
-    <div class="keyboard-top-case"></div>
 </div>

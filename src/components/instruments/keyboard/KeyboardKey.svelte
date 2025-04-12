@@ -4,7 +4,6 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
 </script>
 
 <style>
-
     .lower-key {
         width: 50px;
         height: 200px;
@@ -13,8 +12,8 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
         margin: 0px;
         position: relative;
         z-index: 1;
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
         touch-action: manipulation;
         display: flex;
@@ -22,6 +21,14 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
         justify-content: flex-end;
         align-items: center;
         padding-bottom: 10px;
+    }
+
+    .lower-key:first-of-type {
+        border-top-left-radius: 4px;
+    }
+
+    .lower-key:last-of-type {
+        border-top-right-radius: 4px;
     }
 
     .upper-key {
@@ -32,9 +39,8 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
         margin: 0px;
         position: relative;
         z-index: 1;
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
         touch-action: manipulation;
         display: flex;
         flex-direction: column;

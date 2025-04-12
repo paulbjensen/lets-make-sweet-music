@@ -4,9 +4,9 @@ Nothing beats a little TODO list in Markdown.
 
 ## Timeline
 
+- [ ] Add a time axis to the Timeline (seconds or bars/beats)
 - [ ] Add scrolling support for the timeline
 - [ ] When the note is played, light it up in the timeline with some fancy CSS animation
-- [ ] Add a time axis to the Timeline (seconds or bars/beats)
 
 ## Clock
 

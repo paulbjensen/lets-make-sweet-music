@@ -34,6 +34,8 @@ onDestroy(() => {
 		moveMarkerToStart,
 	);
 });
+
+const axisPoints = new Array(14).fill(0);
 </script>
 
 <style>
@@ -44,6 +46,7 @@ onDestroy(() => {
         width: 800px;
         height: 200px;
         position: relative;
+        display: grid;
     }
 
     #marker {
@@ -51,7 +54,7 @@ onDestroy(() => {
         display: flex;
         flex-direction: column;
         align-items: center;
-        top: 0;
+        top: 0px;
         left: var(--left, 0);
         width: 10px;
     }
@@ -73,9 +76,29 @@ onDestroy(() => {
     }
 
     #tracks {
-        margin-top: 10px;
+        margin-top: 30px;
         display: grid;
         grid-gap: 5px;
+        align-items: flex-start;
+    }
+
+    #axis {
+        position: absolute;
+        top: 0;
+        left: 80px;
+        width: calc(100% - 80px);
+        height: 20px;
+        border-bottom: 1px solid white;
+        display: grid;
+        grid-template-columns: repeat(14, 50px);
+    }
+
+    #axis > .axis-point {
+        position: relative;
+        width: 1px;
+        height: 10px;
+        top: 10px;
+        background-color: white;
     }
 
 </style>
@@ -91,9 +114,11 @@ onDestroy(() => {
             <div id="marker-tail"></div>
         </div>
 
-        <div>
+        <div id="axis">
+            {#each axisPoints as point}
+                <div class="axis-point"></div>
+            {/each}
         </div>
-
         <div id="tracks">
             {#each tracks as track}
                 <Track {track} number={tracks.indexOf(track) + 1} {eventEmitter} {pressKey} {releaseKey} />        
