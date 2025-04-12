@@ -90,7 +90,7 @@ onDestroy(() => {
     .keyboard {
         position: relative;
         padding: 10px;
-        background-color: rgb(0, 0, 0);
+        background-color: #373632;
         border-radius: 8px;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
         width: intrinsic;
@@ -110,6 +110,7 @@ onDestroy(() => {
 
     .keys {
         position: relative;
+        box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
 </style>

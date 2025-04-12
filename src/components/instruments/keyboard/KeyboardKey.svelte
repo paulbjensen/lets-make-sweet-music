@@ -7,8 +7,8 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
     .lower-key {
         width: 50px;
         height: 200px;
-        background-color: white;
-        border: 1px solid black;
+        background-color: #EEE5D5;
+        border: 1px solid #A39D95;
         margin: 0px;
         position: relative;
         z-index: 1;
@@ -32,10 +32,10 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
     }
 
     .upper-key {
-        width: 45px;
-        height: 100px;
-        background-color: black;
-        border: 1px solid black;
+        width: 35px;
+        height: 120px;
+        background-color: #2D2F2B;
+        border: 1px solid #2D2F2B;
         margin: 0px;
         position: relative;
         z-index: 1;
@@ -50,55 +50,50 @@ const { keyClass, pressed, onmousedown, onmouseup, id, shortcut, note } =
     }
 
     .upper-key:nth-of-type(1) {
-        left: 25px;
+        left: 32px;
     }
 
     .upper-key:nth-of-type(2) {
-        left: 30px;
+        left: 48px;
     }
     .upper-key:nth-of-type(3) {
-        left: 85px;
+        left: 112px;
     }
     .upper-key:nth-of-type(4) {
-        left: 90px;
+        left: 128px;
     }
     .upper-key:nth-of-type(5) {
-        left: 95px;
+        left: 144px;
     }
 
     .key-note {
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 18px;
-        font-weight: bold;
-        font-style: italic;
-        color: #333;
+        color: #48494A;
         text-transform: uppercase;
     }
 
     .key-shortcut {
         font-size: 18px;
-        font-weight: bold;
-        color: #ccc;
+        color: #aeaeae;
         text-transform: uppercase;
     }
 
     .upper-key .key-note {
-        font-size: 16px;
-        font-weight: 400;
+        font-size: 12px;
         color: white;
     }
     .upper-key .key-shortcut {
-        font-size: 16px;
+        font-size: 12px;
         color: #ccc;
     }
 
     .lower-key:hover, .upper-key:hover {
-        background-color: rgb(250, 226, 72);
         cursor: pointer;
     }
 
     .pressed {
-        background-color: rgb(255, 160, 45);
-        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.5),
+        box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.5),
         0px 1px 1px rgba(0, 0, 0, 0.5);
     }
 
