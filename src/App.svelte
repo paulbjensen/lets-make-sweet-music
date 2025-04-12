@@ -2,13 +2,12 @@
 // Dependencies
 import { onDestroy, onMount } from "svelte";
 
-import Timeline from "./components/Timeline.svelte";
 // UI Components
+import Timeline from "./components/Timeline.svelte";
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
-import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
-
 // Utils
 import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
+import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import eventEmitter from "./eventEmitter";
 import Recording from "./utils/Recording/Recording";
 import { Oscillator } from "./utils/analysers/Oscillator";

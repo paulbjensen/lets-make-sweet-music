@@ -117,7 +117,7 @@ onDestroy(() => {
 
 <div class="keyboard">
     <div class="keys">
-        {#snippet keysOnKeyboard(containerClass:string, type:string, keyClass:string)}        
+        {#snippet keysOnKeyboard(containerClass:string, type:KeyType, keyClass:string)}        
             <div class={containerClass}>
                 {#each keys.filter(filterForKeyType(type)) as key}
                     <KeyboardKey

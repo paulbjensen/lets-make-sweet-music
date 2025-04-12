@@ -88,7 +88,11 @@ const {
         font-size: 11px;
         font-weight: bold;
         text-transform: uppercase;
-        padding: 4px 6px;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border-radius: 4px;
         color: #aeaeae;
         border: solid 1px #c9c9c9;
@@ -104,6 +108,7 @@ const {
         font-size: 10px;
         color: #aeaeae;
         border: solid 1px #c9c9c9;
+        box-shadow: inset 0px 0px 4px rgba(255, 255, 255, 0.1);
     }
 
     .lower-key:hover, .upper-key:hover {
