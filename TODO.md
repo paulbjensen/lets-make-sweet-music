@@ -2,8 +2,6 @@
 
 Nothing beats a little TODO list in Markdown.
 
-- [x] Disable the download button when recording is happening, and when no tracks exist
-
 ## Timeline
 
 - [ ] Add scrolling support for the timeline
@@ -31,7 +29,7 @@ Nothing beats a little TODO list in Markdown.
 
 ## Recording
 
-- [ ] Perhaps, capture jamming in a way so that if you produce something and wished you had recorded it, then it is there and you can simply pull it into a track. Yeah that would be nice
+- [ ] Perhaps, capture jamming in a way so that if you produce something and wished you had recorded it, then it is there and you can simply pull it into a track. Yeah that would be nice.
 
 ## Be able to save tracks and songs
 
@@ -51,3 +49,9 @@ Need to create a data hierarchy
 - A track has one instrument
 - A track has many clips
 - A clip has many notes
+
+## Stuff that is done
+
+- [x] Disable the download button when recording is happening, and when no tracks exist
+- [x] Be able to pass an array of events to attach to/detach from a single function
+

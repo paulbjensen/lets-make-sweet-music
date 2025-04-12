@@ -33,23 +33,17 @@ function reset() {
 
 // Let's bind the start and stop functions to the event emitter
 onMount(() => {
-	eventEmitter.on("startRecording", start);
-	eventEmitter.on("playTracks", start);
-	eventEmitter.on("playTrack", start);
+	eventEmitter.on(["startRecording", "playTracks", "playTrack"], start);
 	eventEmitter.on("stopRecording", stop);
-	eventEmitter.on("finishPlayingTracks", reset);
-	eventEmitter.on("finishPlayingTrack", reset);
+	eventEmitter.on(["finishPlayingTracks", "finishPlayingTrack"], reset);
 });
 
 // When the component is destroyed, we want to remove the event listeners
 onDestroy(() => {
 	stop(); // Just in case it is running for some reason
-	eventEmitter.off("startRecording", start);
-	eventEmitter.off("playTracks", start);
-	eventEmitter.off("playTrack", start);
+	eventEmitter.off(["startRecording", "playTracks", "playTrack"], start);
 	eventEmitter.off("stopRecording", stop);
-	eventEmitter.off("finishPlayingTracks", reset);
-	eventEmitter.off("finishPlayingTrack", reset);
+	eventEmitter.off(["finishPlayingTracks", "finishPlayingTrack"], reset);
 });
 </script>
 

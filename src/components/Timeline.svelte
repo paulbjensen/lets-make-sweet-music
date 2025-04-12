@@ -20,17 +20,19 @@ function moveMarkerToStart() {
 }
 
 onMount(() => {
-	eventEmitter.on("playTracks", moveMarker);
-	eventEmitter.on("finishPlayingTracks", moveMarkerToStart);
-	eventEmitter.on("playTrack", moveMarker);
-	eventEmitter.on("finishPlayingTrack", moveMarkerToStart);
+	eventEmitter.on(["playTracks", "playTrack"], moveMarker);
+	eventEmitter.on(
+		["finishPlayingTracks", "finishPlayingTrack"],
+		moveMarkerToStart,
+	);
 });
 
 onDestroy(() => {
-	eventEmitter.off("playTracks", moveMarker);
-	eventEmitter.off("finishPlayingTrack", moveMarkerToStart);
-	eventEmitter.off("playTracks", moveMarker);
-	eventEmitter.off("finishPlayingTrack", moveMarkerToStart);
+	eventEmitter.off(["playTracks", "playTrack"], moveMarker);
+	eventEmitter.off(
+		["finishPlayingTracks", "finishPlayingTrack"],
+		moveMarkerToStart,
+	);
 });
 </script>
 

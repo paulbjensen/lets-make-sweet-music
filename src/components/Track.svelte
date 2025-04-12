@@ -118,13 +118,19 @@ function unlockPlayback() {
 }
 
 onMount(() => {
-	eventEmitter.on("playTrack", lockPlayback);
-	eventEmitter.on("finishPlayingTrack", unlockPlayback);
+	eventEmitter.on(["playTracks", "playTrack"], lockPlayback);
+	eventEmitter.on(
+		["finishPlayingTracks", "finishPlayingTrack"],
+		unlockPlayback,
+	);
 });
 
 onDestroy(() => {
-	eventEmitter.off("playTrack", lockPlayback);
-	eventEmitter.off("finishPlayingTrack", unlockPlayback);
+	eventEmitter.off(["playTracks", "playTrack"], lockPlayback);
+	eventEmitter.off(
+		["finishPlayingTracks", "finishPlayingTrack"],
+		unlockPlayback,
+	);
 });
 </script>
 
@@ -187,6 +193,6 @@ onDestroy(() => {
     </div>
     <div class="track-options">
         <PlaybackButton isPlaying={isPlaying && track === currentTrack} onclick={playWithTrack(track)} {enablePlayback} />
-        <RemoveButton onclick={() => eventEmitter.emit("removeTrack", track)} disabled={isPlaying} />
+        <RemoveButton onclick={() => eventEmitter.emit("removeTrack", track)} disabled={isPlaying || !enablePlayback} />
     </div>
 </div>

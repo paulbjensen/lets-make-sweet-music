@@ -75,15 +75,19 @@ function whenTrackIsPlayed() {
 
 onMount(() => {
 	eventEmitter.on("playTrack", whenTrackIsPlayed);
-	eventEmitter.on("finishPlayingTracks", finishPlayingTracks);
-	eventEmitter.on("finishPlayingTrack", finishPlayingTracks);
+	eventEmitter.on(
+		["finishPlayingTracks", "finishPlayingTrack"],
+		finishPlayingTracks,
+	);
 	eventEmitter.on("removeTrack", checkIfPlayShouldBeEnabled);
 });
 
 onDestroy(() => {
 	eventEmitter.off("playTrack", whenTrackIsPlayed);
-	eventEmitter.off("finishPlayingTracks", finishPlayingTracks);
-	eventEmitter.off("finishPlayingTrack", finishPlayingTracks);
+	eventEmitter.off(
+		["finishPlayingTracks", "finishPlayingTrack"],
+		finishPlayingTracks,
+	);
 	eventEmitter.off("removeTrack", checkIfPlayShouldBeEnabled);
 });
 </script>

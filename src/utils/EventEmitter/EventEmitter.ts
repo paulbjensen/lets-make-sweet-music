@@ -1,5 +1,5 @@
 class EventEmitter {
-	private events: { [key: string]: ((...args: unknown[]) => void)[] } = {};
+	events: { [key: string]: ((...args: unknown[]) => void)[] } = {};
 	enableLogging: boolean;
 
 	constructor() {
@@ -13,17 +13,34 @@ class EventEmitter {
 		}
 	}
 
-	on(event: string, listener: (...args: unknown[]) => void) {
-		if (!this.events[event]) {
-			this.events[event] = [];
+	on(eventOrEvents: string | string[], listener: (...args: unknown[]) => void) {
+		if (Array.isArray(eventOrEvents)) {
+			for (const event of eventOrEvents) {
+				this.on(event, listener);
+			}
+			return;
 		}
-		this.events[event].push(listener);
+		if (!this.events[eventOrEvents]) {
+			this.events[eventOrEvents] = [];
+		}
+		this.events[eventOrEvents].push(listener);
 	}
 
-	off(event: string, listener: (...args: unknown[]) => void) {
-		if (!this.events[event]) return;
+	off(
+		eventOrEvents: string | string[],
+		listener: (...args: unknown[]) => void,
+	) {
+		if (Array.isArray(eventOrEvents)) {
+			for (const event of eventOrEvents) {
+				this.off(event, listener);
+			}
+			return;
+		}
+		if (!this.events[eventOrEvents]) return;
 
-		this.events[event] = this.events[event].filter((l) => l !== listener);
+		this.events[eventOrEvents] = this.events[eventOrEvents].filter(
+			(l) => l !== listener,
+		);
 	}
 
 	emit(event: string, ...args: unknown[]) {
