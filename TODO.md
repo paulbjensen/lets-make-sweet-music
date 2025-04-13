@@ -31,6 +31,11 @@ Nothing beats a little TODO list in Markdown.
 
 - [ ] Perhaps, capture jamming in a way so that if you produce something and wished you had recorded it, then it is there and you can simply pull it into a track. Yeah that would be nice.
 
+## Samples
+
+- [ ] Be able to drag and drop samples into the tracks area to setup a new track
+- [ ] Be able to use samples as soumds for instruments (drum/synth pads)
+
 ## Be able to save tracks and songs
 
 Need to create a data hierarchy 

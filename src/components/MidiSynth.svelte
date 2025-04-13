@@ -1,4 +1,6 @@
 <script lang="ts">
+// Make sure to check out the notes in MidiSynth copy.svelte for comments
+// that explain the code in more detail
 import { onMount } from "svelte";
 import roomWavFile from "../assets/rooms/room.wav";
 
