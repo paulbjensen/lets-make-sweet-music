@@ -8,6 +8,25 @@ import KeyboardKey from "./KeyboardKey.svelte";
 const filterForKeyType = (type: KeyType) => (key: Key) => key.type === type;
 let pressedKeys: string[] = $state([]);
 
+let left = $state(0);
+let top = $state(0);
+let moving = $state(false);
+
+function onMouseDown() {
+	moving = true;
+}
+
+function onMouseMove(e: MouseEvent) {
+	if (moving) {
+		left += e.movementX;
+		top += e.movementY;
+	}
+}
+
+function onMouseUp() {
+	moving = false;
+}
+
 /* 
     This is a list of keys that are available on the keyboard.
     The keys are divided into two types: upper and lower.
@@ -77,12 +96,19 @@ onMount(() => {
 	/* bindings for keyboard actions */
 	window.addEventListener("keydown", handleKeyDown);
 	window.addEventListener("keyup", handleKeyUp);
+	/* bindings for dragging the keyboard */
+	window.addEventListener("mousedown", onMouseDown);
+	window.addEventListener("mousemove", onMouseMove);
+	window.addEventListener("mouseup", onMouseUp);
 });
 
 /* When the component is destroyed, we want to remove the event listeners */
 onDestroy(() => {
 	window.removeEventListener("keydown", handleKeyDown);
 	window.removeEventListener("keyup", handleKeyUp);
+	window.removeEventListener("mousedown", onMouseDown);
+	window.removeEventListener("mousemove", onMouseMove);
+	window.removeEventListener("mouseup", onMouseUp);
 });
 </script>
 
@@ -94,6 +120,11 @@ onDestroy(() => {
         border-radius: 8px;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
         width: intrinsic;
+        cursor: grab;
+    }
+
+    .moving {
+        cursor: grabbing;
     }
 
     .lower-keys {
@@ -115,7 +146,7 @@ onDestroy(() => {
 
 </style>
 
-<div class="keyboard">
+<div class="keyboard" style={`left: ${left}px; top: ${top}px;`} class:moving={moving}>
     <div class="keys">
         {#snippet keysOnKeyboard(containerClass:string, type:KeyType, keyClass:string)}        
             <div class={containerClass}>
@@ -123,8 +154,8 @@ onDestroy(() => {
                     <KeyboardKey
                         {keyClass}
                         pressed={pressedKeys.includes(key.note)}
-                        onmousedown={() => { pressKey(key.note);}}
-                        onmouseup={() => { releaseKey(key.note);}}
+                        onmousedown={(e:MouseEvent) => { e.stopPropagation(); pressKey(key.note);}}
+                        onmouseup={(e:MouseEvent) => { e.stopPropagation(); releaseKey(key.note);}}
                         id={key.id}
                         shortcut={key.shortcut}
                         note={key.note}
