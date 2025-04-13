@@ -10,7 +10,7 @@ Nothing beats a little TODO list in Markdown.
 
 ## Timer
 
-- [ ] Add an option in the timer component to show beats/bars and BPM settings
+- [ ] Add an option in the timer component to show beats/bars and BPM settings (time signature)
 
 ## Track clips
 
@@ -56,4 +56,4 @@ Need to create a data hierarchy
 - [x] Be able to pass an array of events to attach to/detach from a single function
 - [x] Add a clock component in the navigation bar that shows the time
 - [x] Make the keyboard draggable
-
+- [x] Handle cases where fetching a music file fails in the soundBox
