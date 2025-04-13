@@ -17,7 +17,7 @@ function onMouseDown() {
 }
 
 function onMouseMove(e: MouseEvent) {
-	if (moving) {
+	if (moving && pressedKeys.length === 0) {
 		left += e.movementX;
 		top += e.movementY;
 	}
@@ -99,22 +99,30 @@ function handleKeyUp(event: KeyboardEvent) {
 }
 
 onMount(() => {
+	const keyboard = document.querySelector(".keyboard");
+
 	/* bindings for keyboard actions */
 	window.addEventListener("keydown", handleKeyDown);
 	window.addEventListener("keyup", handleKeyUp);
 	/* bindings for dragging the keyboard */
-	window.addEventListener("mousedown", onMouseDown);
-	window.addEventListener("mousemove", onMouseMove);
-	window.addEventListener("mouseup", onMouseUp);
+	if (keyboard) {
+		keyboard.addEventListener("mousedown", onMouseDown);
+		window.addEventListener("mousemove", onMouseMove);
+		keyboard.addEventListener("mouseup", onMouseUp);
+	}
 });
 
 /* When the component is destroyed, we want to remove the event listeners */
 onDestroy(() => {
+	const keyboard = document.querySelector(".keyboard");
 	window.removeEventListener("keydown", handleKeyDown);
 	window.removeEventListener("keyup", handleKeyUp);
-	window.removeEventListener("mousedown", onMouseDown);
-	window.removeEventListener("mousemove", onMouseMove);
-	window.removeEventListener("mouseup", onMouseUp);
+	/* bindings for dragging the keyboard */
+	if (keyboard) {
+		keyboard.removeEventListener("mousedown", onMouseDown);
+		window.removeEventListener("mousemove", onMouseMove);
+		keyboard.removeEventListener("mouseup", onMouseUp);
+	}
 });
 </script>
 
