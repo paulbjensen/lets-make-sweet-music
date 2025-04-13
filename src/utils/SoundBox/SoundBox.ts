@@ -10,6 +10,27 @@
     - We also need a way relate this to instruments, as sounds may be specific to an instrument
 */
 
+/*
+	Adding this as a way to attempt a retry on a fetch request.
+*/
+export async function fetchWithRetry(
+	url: string,
+	retries = 3,
+	delay = 10,
+): Promise<Response> {
+	for (let attempt = 1; attempt <= retries; attempt++) {
+		try {
+			const res = await fetch(url);
+			if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+			return res;
+		} catch (e) {
+			if (attempt === retries) throw e;
+			await new Promise((r) => setTimeout(r, delay));
+		}
+	}
+	throw new Error(`Failed to fetch ${url} after ${retries} attempts`);
+}
+
 export class SoundBox {
 	audioContext: AudioContext;
 	soundBuffers: Record<string, AudioBuffer>;
@@ -32,7 +53,7 @@ export class SoundBox {
 		const entries = Object.entries(this.keyToFile);
 		await Promise.all(
 			entries.map(async ([key, src]) => {
-				const response = await fetch(src);
+				const response = await fetchWithRetry(src);
 				const arrayBuffer = await response.arrayBuffer();
 				const audioBuffer =
 					await this.audioContext.decodeAudioData(arrayBuffer);

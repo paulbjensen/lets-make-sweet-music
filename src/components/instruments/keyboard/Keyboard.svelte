@@ -78,7 +78,10 @@ function releaseKey(note: string) {
 }
 
 function handleKeyDown(event: KeyboardEvent) {
-	const note = keys.find((key: Key) => key.shortcut === event.key)?.note;
+	// NOTE - we convert to lowercase in case the user accidentally presses shift or has the caps lock on
+	const note = keys.find(
+		(key: Key) => key.shortcut === event.key.toLowerCase(),
+	)?.note;
 	if (!note) return;
 	pressKey(note);
 }
@@ -87,7 +90,10 @@ function handleKeyDown(event: KeyboardEvent) {
   This function is called when a key on the computer keyboard is released.
 */
 function handleKeyUp(event: KeyboardEvent) {
-	const note = keys.find((key: Key) => key.shortcut === event.key)?.note;
+	// NOTE - we convert to lowercase in case the user accidentally presses shift or has the caps lock on
+	const note = keys.find(
+		(key: Key) => key.shortcut === event.key.toLowerCase(),
+	)?.note;
 	if (!note) return;
 	releaseKey(note);
 }
