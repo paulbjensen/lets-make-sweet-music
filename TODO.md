@@ -8,9 +8,9 @@ Nothing beats a little TODO list in Markdown.
 - [ ] Add scrolling support for the timeline
 - [ ] When the note is played, light it up in the timeline with some fancy CSS animation
 
-## Clock
+## Timer
 
-- [ ] Add a clock component in the navigation bar that shows the time (both in seconds and in beats/bars)
+- [ ] Add an option in the timer component to show beats/bars and BPM settings
 
 ## Track clips
 
@@ -54,4 +54,6 @@ Need to create a data hierarchy
 
 - [x] Disable the download button when recording is happening, and when no tracks exist
 - [x] Be able to pass an array of events to attach to/detach from a single function
+- [x] Add a clock component in the navigation bar that shows the time
+- [x] Make the keyboard draggable
 
