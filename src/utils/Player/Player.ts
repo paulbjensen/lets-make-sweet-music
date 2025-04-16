@@ -15,12 +15,16 @@ class Player {
 		this.eventEmitter = eventEmitter;
 	}
 
-	calculateDuration() {
-		const durations = this.tracks.map((track) => {
-			return track.endedAt && track.startedAt
+	calculateTrackDuration(track: Recording) {
+		const duration =
+			track.endedAt && track.startedAt
 				? track.endedAt - track.startedAt
 				: track.events[track.events.length - 1].timestamp;
-		});
+		return duration;
+	}
+
+	calculateSongDuration() {
+		const durations = this.tracks.map(this.calculateTrackDuration);
 		const duration = Math.max(...durations);
 		return duration;
 	}
@@ -42,14 +46,14 @@ class Player {
 		}
 	}
 
-	play() {
+	playSong() {
 		if (this.tracks.length === 0) {
 			console.log("No tracks to play");
 			this.eventEmitter.emit("finishPlayingTracks");
 			return;
 		}
 
-		const duration = this.calculateDuration();
+		const duration = this.calculateSongDuration();
 		setTimeout(() => {
 			this.eventEmitter.emit("finishPlayingTracks");
 		}, duration);

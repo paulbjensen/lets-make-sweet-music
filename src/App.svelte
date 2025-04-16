@@ -53,7 +53,7 @@ function play() {
 		This is loading the tracks each time - I maye find a way to set it up 
 		once and ensure the tracks list is kept up to date.
 	*/
-	new Player({ tracks, eventEmitter }).play();
+	new Player({ tracks, eventEmitter }).playSong();
 }
 
 /* This saves the recording to the tracks list */

@@ -2,6 +2,7 @@
 // Dependencies
 import { onDestroy, onMount } from "svelte";
 import type { Note } from "../types";
+import Player from "../utils/Player/Player";
 import type Recording from "../utils/Recording/Recording";
 import PlaybackButton from "./buttons/PlaybackButton.svelte";
 import RemoveButton from "./buttons/RemoveButton.svelte";
@@ -82,26 +83,22 @@ function play() {
 		console.error("No track selected");
 		return;
 	}
+
+	const player = new Player({ tracks: [currentTrack], eventEmitter });
+
 	eventEmitter.emit("playTrack", currentTrack);
 	isPlaying = true;
-	const duration =
-		currentTrack.endedAt && currentTrack.startedAt
-			? currentTrack.endedAt - currentTrack.startedAt
-			: currentTrack.events[currentTrack.events.length - 1].timestamp;
+
+	// This bit could be refactored out
+	const duration = player.calculateTrackDuration(currentTrack);
+
+	// This is specific to playing a track
 	setTimeout(() => {
 		eventEmitter.emit("finishPlayingTrack", currentTrack);
 		isPlaying = false;
 	}, duration);
-	for (const event of currentTrack.events) {
-		const delay = event.timestamp;
-		setTimeout(() => {
-			if (event.type === "pressKey") {
-				eventEmitter.emit("pressKey", event.key);
-			} else if (event.type === "releaseKey") {
-				eventEmitter.emit("releaseKey", event.key);
-			}
-		}, delay);
-	}
+
+	player.playTrack(currentTrack);
 }
 
 /*
