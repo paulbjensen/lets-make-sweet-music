@@ -1,4 +1,6 @@
-import { SoundBox } from "../../../utils/SoundBox/SoundBox";
+import { SoundBox } from "../../utils/SoundBox/SoundBox";
+
+// This ought to be moved to another location, so that we can have instruments that change up the sounds in the
 
 /*
     This is used as a way to load sounds and play them
@@ -39,5 +41,5 @@ const keyToFile: Record<string, string> = {
 	"A#3": soundEight,
 };
 
-const keyboardSoundBox = new SoundBox(keyToFile);
-export { keyboardSoundBox };
+const waaSoundBox = new SoundBox(keyToFile);
+export { waaSoundBox };

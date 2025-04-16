@@ -3,8 +3,17 @@
 // that explain the code in more detail
 import { onMount } from "svelte";
 import roomWavFile from "../assets/rooms/room.wav";
+import {
+	describeVelocity,
+	getNoteName,
+	parseStatusByte,
+} from "../utils/MidiRecorder/midiDecoder";
 
-let midiStatus = "Waiting for MIDI...";
+const { eventEmitter } = $props();
+
+let midiStatus = $state("Waiting for MIDI...");
+const midiLogs: string[] = $state([]);
+
 const audioCtx = new AudioContext();
 const activeVoices: Record<number, { osc: OscillatorNode; gain: GainNode }> =
 	{};
@@ -71,6 +80,19 @@ function stopNote(note: number) {
 }
 
 onMount(async () => {
+	// Used for scrolling the MIDI logs container
+	// to the bottom when new logs are added
+	const midiLogsContainer: HTMLDivElement | null =
+		document.querySelector(".midi-logs");
+	if (midiLogsContainer) {
+		const observer = new MutationObserver(() => {
+			midiLogsContainer.scrollTop = midiLogsContainer.scrollHeight;
+		});
+
+		observer.observe(midiLogsContainer, { childList: true });
+		// return () => observer.disconnect();
+	}
+
 	if (!navigator.requestMIDIAccess) {
 		midiStatus = "Web MIDI API not supported";
 		return;
@@ -91,11 +113,24 @@ onMount(async () => {
 		input.onmidimessage = (event: MIDIMessageEvent) => {
 			if (event.data) {
 				const [status, note, velocity] = event.data;
-				const command = status & 0xf0;
+				midiLogs.push(event.data.join(","));
+				const { command, channel } = parseStatusByte(status);
+				const noteName = getNoteName(note);
+				const velocityLabel = describeVelocity(velocity);
 
-				if (command === 0x90 && velocity > 0) {
+				const logItem = `${command} ${noteName} on channel ${channel} at velocity ${velocity} (${velocityLabel})`;
+				midiLogs.push(logItem);
+
+				const parsedCommand = status & 0xf0;
+
+				if (parsedCommand === 0x90 && velocity > 0) {
+					// eventEmitter.emit('pressKey', noteName);
 					playNote(note, velocity);
-				} else if (command === 0x80 || (command === 0x90 && velocity === 0)) {
+				} else if (
+					parsedCommand === 0x80 ||
+					(parsedCommand === 0x90 && velocity === 0)
+				) {
+					// eventEmitter.emit('releaseKey', noteName);
 					stopNote(note);
 				}
 			}
@@ -118,25 +153,23 @@ onMount(async () => {
     margin: 1rem 0;
     display: inline-block;
   }
+
+  .midi-logs {
+	background: #222;
+	color: #fff;
+	font-family: monospace;
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	margin: 1rem 0;
+	max-height: 200px;
+	overflow-y: auto;
+  }
 </style>
 
 <h3>🎹 Smooth Synth (ADSR + Filter + Reverb)</h3>
 <div class="synth-status">{midiStatus}</div>
-<div class="controls">
-  <button on:click={() => playNote.bind(null, 60, 127)}>Play C4</button>
-  <button on:click={() => stopNote.bind(null, 60)}>Stop C4</button>
-  <button on:click={() => playNote(67, 127)}>Play B4</button>
-  <button on:click={() => stopNote(67)}>Stop B4</button>
-  <button on:click={() => playNote(72, 127)}>Play C5</button>
-  <button on:click={() => stopNote(72)}>Stop C5</button>
-  <button on:click={() => playNote(74, 127)}>Play D5</button>
-  <button on:click={() => stopNote(74)}>Stop D5</button>
-  <button on:click={() => playNote(76, 127)}>Play E5</button>
-  <button on:click={() => stopNote(76)}>Stop E5</button>
-  <button on:click={() => playNote(79, 127)}>Play G5</button>
-  <button on:click={() => stopNote(79)}>Stop G5</button>
-  <button on:click={() => playNote(81, 127)}>Play A5</button>
-  <button on:click={() => stopNote(81)}>Stop A5</button>
-  <button on:click={() => playNote(84, 127)}>Play B5</button>
-  <button on:click={() => stopNote(84)}>Stop B5</button>
-</div>    
+<div class="midi-logs">
+	{#each midiLogs as log}
+		<div>{log}</div>
+	{/each}
+</div>

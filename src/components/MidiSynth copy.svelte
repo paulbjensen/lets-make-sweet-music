@@ -3,7 +3,8 @@
 import { onMount } from "svelte";
 
 // The text for the MIDI status
-let midiStatus = "Waiting for MIDI...";
+let midiStatus: string = $state("Waiting for MIDI...");
+const midiLogs: string[] = $state([]);
 
 // The audio context
 const audioCtx = new AudioContext();
@@ -86,6 +87,8 @@ onMount(async () => {
 				// The status byte contains the command and channel
 				// The note byte contains the note number
 				// The velocity byte contains the velocity (0-127)
+				midiLogs.push(event.data.join(", "));
+
 				const [status, note, velocity] = event.data;
 				const command = status & 0xf0;
 
@@ -116,15 +119,31 @@ onMount(async () => {
     margin: 1rem 0;
     display: inline-block;
   }
+
+  .midi-logs {
+	background: #222;
+	color: #fff;
+	font-family: monospace;
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	margin: 1rem 0;
+	max-height: 200px;
+	overflow-y: auto;
+  }
 </style>
 
 <h3>🎹 MIDI Synth (Sine Wave)</h3>
 <div class="midi-status">{midiStatus}</div>
-<button onclick={playNote.bind(null, 60, 127)}>Play Middle C</button>
+<div class="midi-logs">
+	{#each midiLogs as log}
+		<div>{JSON.stringify(log)}</div>
+	{/each}
+</div>
+<!-- <button onclick={playNote.bind(null, 60, 127)}>Play Middle C</button>
 <button onclick={stopNote.bind(null, 60)}>Stop Middle C</button>
 <button onclick={playNote.bind(null, 62, 127)}>Play D</button>
 <button onclick={stopNote.bind(null, 62)}>Stop D</button>
 <button onclick={playNote.bind(null, 64, 127)}>Play E</button>
 <button onclick={stopNote.bind(null, 64)}>Stop E</button>
 <button onclick={playNote.bind(null, 65, 127)}>Play F</button>
-<button onclick={stopNote.bind(null, 65)}>Stop F</button>
+<button onclick={stopNote.bind(null, 65)}>Stop F</button> -->

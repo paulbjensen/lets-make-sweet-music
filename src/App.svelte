@@ -5,19 +5,19 @@ import { onDestroy, onMount } from "svelte";
 // UI Components
 import Timeline from "./components/Timeline.svelte";
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
-// Utils
-import { keyboardSoundBox } from "./components/instruments/keyboard/keyboardSoundBox";
 import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import eventEmitter from "./eventEmitter";
+// Utils
+import { waaSoundBox } from "./soundBoxes/waaSoundbox/waaSoundBox";
 import Recording from "./utils/Recording/Recording";
 import { Oscillator } from "./utils/analysers/Oscillator";
 
 // Here we connect the soundBox to the Oscillator
 const oscillator = new Oscillator({
-	audioContext: keyboardSoundBox.audioContext,
+	audioContext: waaSoundBox.audioContext,
 	fftSize: 2048,
 });
-keyboardSoundBox.analyser = oscillator.analyser;
+waaSoundBox.analyser = oscillator.analyser;
 
 // States
 
@@ -33,7 +33,7 @@ const recording = new Recording();
 
 function pressKey(key: string) {
 	recording.addEvent({ type: "pressKey", key });
-	keyboardSoundBox.playSound(key);
+	waaSoundBox.playSound(key);
 }
 
 /*
@@ -111,7 +111,7 @@ function stopRecording() {
 	the song to have a bit of space at the start and end of the track.
 */
 function startBurning() {
-	keyboardSoundBox.startBurning();
+	waaSoundBox.startBurning();
 	eventEmitter.emit("playTracks");
 }
 
@@ -120,14 +120,14 @@ function startBurning() {
 	burn tracks onto CDs back in the day).
 */
 function stopBurning() {
-	if (keyboardSoundBox.isBurning) {
-		keyboardSoundBox.stopBurning();
+	if (waaSoundBox.isBurning) {
+		waaSoundBox.stopBurning();
 	}
 }
 
 /* When the component mounts, we want to load the sounds for playback */
 onMount(async () => {
-	await keyboardSoundBox.loadSounds();
+	await waaSoundBox.loadSounds();
 	eventEmitter.on("removeTrack", (track) => removeTrack(track as Recording));
 	eventEmitter.on("playTracks", play);
 	eventEmitter.on("startRecording", startRecording);
@@ -162,7 +162,7 @@ onDestroy(() => {
 </style>
 
 <NavigationBar
-  analyser={keyboardSoundBox.analyser}
+  analyser={waaSoundBox.analyser}
   dataArray={oscillator.dataArray}
   bufferLength={oscillator.bufferLength}
   {eventEmitter}
