@@ -1,6 +1,6 @@
 <script lang="ts">
 import { onDestroy, onMount } from "svelte";
-const { tracks, eventEmitter, pressKey, releaseKey } = $props();
+const { tracks, eventEmitter } = $props();
 import Track from "./Track.svelte";
 
 const initialMarkerPosition = 75;
@@ -121,7 +121,7 @@ const axisPoints = new Array(14).fill(0);
         </div>
         <div id="tracks">
             {#each tracks as track}
-                <Track {track} number={tracks.indexOf(track) + 1} {eventEmitter} {pressKey} {releaseKey} />        
+                <Track {track} number={tracks.indexOf(track) + 1} {eventEmitter} />        
             {/each}
         </div>
     </div>

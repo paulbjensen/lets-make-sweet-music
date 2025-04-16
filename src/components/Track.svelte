@@ -7,7 +7,7 @@ import PlaybackButton from "./buttons/PlaybackButton.svelte";
 import RemoveButton from "./buttons/RemoveButton.svelte";
 
 // Props
-const { track, number, eventEmitter, pressKey, releaseKey } = $props();
+const { track, number, eventEmitter } = $props();
 
 // States
 let currentTrack: Recording | null = $state(null);
@@ -96,9 +96,9 @@ function play() {
 		const delay = event.timestamp;
 		setTimeout(() => {
 			if (event.type === "pressKey") {
-				pressKey(event.key);
+				eventEmitter.emit("pressKey", event.key);
 			} else if (event.type === "releaseKey") {
-				releaseKey(event.key);
+				eventEmitter.emit("releaseKey", event.key);
 			}
 		}, delay);
 	}

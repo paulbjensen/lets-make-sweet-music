@@ -9,6 +9,7 @@ import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import eventEmitter from "./eventEmitter";
 // Utils
 import { waaSoundBox } from "./soundBoxes/waaSoundbox/waaSoundBox";
+import Player from "./utils/Player/Player";
 import Recording from "./utils/Recording/Recording";
 import { Oscillator } from "./utils/analysers/Oscillator";
 
@@ -20,7 +21,6 @@ const oscillator = new Oscillator({
 waaSoundBox.analyser = oscillator.analyser;
 
 // States
-
 let tracks: Recording[] = $state([]);
 
 // Configuration
@@ -49,32 +49,11 @@ function removeTrack(track: Recording) {
 }
 
 function play() {
-	if (tracks.length === 0) {
-		console.log("No tracks to play");
-		eventEmitter.emit("finishPlayingTracks");
-	}
-	const durations = tracks.map((track) => {
-		return track.endedAt && track.startedAt
-			? track.endedAt - track.startedAt
-			: track.events[track.events.length - 1].timestamp;
-	});
-	const duration = Math.max(...durations);
-	setTimeout(() => {
-		eventEmitter.emit("finishPlayingTracks");
-	}, duration);
-
-	for (const track of tracks) {
-		for (const event of track.events) {
-			const delay = event.timestamp;
-			setTimeout(() => {
-				if (event.type === "pressKey") {
-					pressKey(event.key);
-				} else if (event.type === "releaseKey") {
-					releaseKey(event.key);
-				}
-			}, delay);
-		}
-	}
+	/*
+		This is loading the tracks each time - I maye find a way to set it up 
+		once and ensure the tracks list is kept up to date.
+	*/
+	new Player({ tracks, eventEmitter }).play();
 }
 
 /* This saves the recording to the tracks list */
@@ -169,6 +148,6 @@ onDestroy(() => {
   {tracks}
 />
 <main>
-  <Timeline {tracks} {eventEmitter} {pressKey} {releaseKey} />
+  <Timeline {tracks} {eventEmitter} />
   <Keyboard {eventEmitter} />
 </main>

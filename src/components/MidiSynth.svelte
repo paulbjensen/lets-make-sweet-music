@@ -9,7 +9,7 @@ import {
 	parseStatusByte,
 } from "../utils/MidiRecorder/midiDecoder";
 
-const { eventEmitter } = $props();
+// const { eventEmitter } = $props();
 
 let midiStatus = $state("Waiting for MIDI...");
 const midiLogs: string[] = $state([]);

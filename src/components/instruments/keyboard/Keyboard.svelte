@@ -41,7 +41,17 @@ function onMouseUp() {
 
     // This feels like it belongs to an instrument instance,
     // in a sequence of instruments.
+
   */
+
+/*
+    What should the command look like for a keyboard keypress down and a keypress up?
+
+    status: noteon  channel 1  note 60  velocity 100
+    status: noteoff channel 1  note 60  velocity 100
+
+*/
+
 const keys: Key[] = [
 	{ type: "lower", id: 1, note: "C3", shortcut: "a" },
 	{ type: "lower", id: 2, note: "D3", shortcut: "s" },
