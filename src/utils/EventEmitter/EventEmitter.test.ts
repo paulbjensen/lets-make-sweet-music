@@ -2,6 +2,52 @@ import { describe, expect, test, vi } from "vitest";
 import EventEmitter from "./EventEmitter";
 
 describe("EventEmitter", () => {
+	describe("constructor", () => {
+		describe("typedEvents property", () => {
+			describe("when passed an array of event names", () => {
+				test("should initialize events with empty arrays", () => {
+					const emitter = new EventEmitter({
+						typedEvents: ["event1", "event2"],
+					});
+					expect(emitter.events.event1).toEqual([]);
+					expect(emitter.events.event2).toEqual([]);
+				});
+
+				test("should throw an error when trying to call an event that has not been specified in the typedEvents list", () => {
+					const emitter = new EventEmitter({
+						typedEvents: ["event1", "event2"],
+					});
+					expect(() => emitter.emit("event3")).toThrowError(
+						"Event 'event3' is not defined in typedEvents",
+					);
+					expect(() => emitter.on("event3", () => {})).toThrowError(
+						"Event 'event3' is not defined in typedEvents",
+					);
+					expect(() => emitter.off("event3", () => {})).toThrowError(
+						"Event 'event3' is not defined in typedEvents",
+					);
+					expect(() => emitter.emit("event1")).not.toThrowError();
+					expect(() => emitter.on("event1", () => {})).not.toThrowError();
+					expect(() => emitter.off("event1", () => {})).not.toThrowError();
+				});
+			});
+
+			describe("when not passed an array of event names", () => {
+				test("should initialize events with empty arrays", () => {
+					const emitter = new EventEmitter();
+					expect(emitter.events).toEqual({});
+				});
+
+				test("should not throw an error when trying to call an event that has not been specified in the typedEvents list", () => {
+					const emitter = new EventEmitter();
+					expect(() => emitter.emit("event3")).not.toThrowError();
+					expect(() => emitter.on("event3", () => {})).not.toThrowError();
+					expect(() => emitter.off("event3", () => {})).not.toThrowError();
+				});
+			});
+		});
+	});
+
 	describe(".enableLogging", () => {
 		test("should not log by default as logging is set to false", () => {
 			const emitter = new EventEmitter();

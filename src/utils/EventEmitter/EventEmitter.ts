@@ -1,15 +1,32 @@
+interface EventEmitterInterface {
+	typedEvents?: string[];
+}
+
 class EventEmitter {
+	typedEvents?: string[] | undefined;
 	events: { [key: string]: ((...args: unknown[]) => void)[] } = {};
 	enableLogging: boolean;
 
-	constructor() {
+	constructor({ typedEvents }: EventEmitterInterface = {}) {
 		this.events = {};
 		this.enableLogging = false;
+		if (typedEvents) {
+			this.typedEvents = typedEvents;
+			for (const event of typedEvents) {
+				this.events[event] = [];
+			}
+		}
 	}
 
 	log(...args: unknown[]) {
 		if (this.enableLogging) {
 			console.log(...args);
+		}
+	}
+
+	checkIfEventIsTyped(event: string) {
+		if (this.typedEvents && !this.typedEvents.includes(event)) {
+			throw new Error(`Event '${event}' is not defined in typedEvents`);
 		}
 	}
 
@@ -20,6 +37,7 @@ class EventEmitter {
 			}
 			return;
 		}
+		this.checkIfEventIsTyped(eventOrEvents);
 		if (!this.events[eventOrEvents]) {
 			this.events[eventOrEvents] = [];
 		}
@@ -36,6 +54,7 @@ class EventEmitter {
 			}
 			return;
 		}
+		this.checkIfEventIsTyped(eventOrEvents);
 		if (!this.events[eventOrEvents]) return;
 
 		this.events[eventOrEvents] = this.events[eventOrEvents].filter(
@@ -44,6 +63,7 @@ class EventEmitter {
 	}
 
 	emit(event: string, ...args: unknown[]) {
+		this.checkIfEventIsTyped(event);
 		this.log("Emitting event:", event, "with args:", ...args);
 		if (!this.events[event]) return;
 

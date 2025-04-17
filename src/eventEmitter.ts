@@ -21,7 +21,32 @@ import EventEmitter from "./utils/EventEmitter/EventEmitter";
     props, and allows for a more decoupled architecture.
 */
 
-const eventEmitter = new EventEmitter();
+/*
+    This is used as a way of keeping track of the events we have defined in the
+    application across the files.
+
+    If we pass this to the EventEmitter class upon initialization, and then we 
+    we try to call the emit, on, or off functions with an event that is not in 
+    this list, it will throw an error.
+    
+    This is useful, as it will help us to catch typos and also keep a record 
+    of the events we use in the application.
+*/
+const typedEvents = [
+	"playTracks",
+	"playSound",
+	"playTrack",
+	"finishPlayingTrack",
+	"removeTrack",
+	"pressKey",
+	"releaseKey",
+	"finishPlayingTracks",
+	"startRecording",
+	"stopRecording",
+	"startBurning",
+];
+
+const eventEmitter = new EventEmitter({ typedEvents });
 
 // Set this flag to true to enable logging
 // eventEmitter.enableLogging = true;
