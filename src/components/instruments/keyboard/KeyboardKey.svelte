@@ -9,6 +9,7 @@ const {
 	note,
 	showNote,
 	showShortcut,
+	disabled,
 } = $props();
 </script>
 
@@ -69,11 +70,16 @@ const {
         left: 112px;
     }
     .upper-key:nth-of-type(4) {
-        left: 128px;
+        left: 127px;
     }
     .upper-key:nth-of-type(5) {
-        left: 144px;
+        left: 142px;
     }
+
+    .upper-key:nth-of-type(6) {
+        left: 208px;
+    }
+
 
     .key-note {
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -120,12 +126,18 @@ const {
         0px 1px 1px rgba(0, 0, 0, 0.5);
     }
 
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
 </style>
 
 <button class={[keyClass, {pressed}]}
     {onmousedown}
     {onmouseup}
     data-id={id}
+    {disabled}
 >
     {#if showNote}
         <div class="key-note">

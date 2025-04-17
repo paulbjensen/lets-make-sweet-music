@@ -67,6 +67,16 @@ function getNoteName(noteNumber: number): string {
 	return `${note}${octave}`;
 }
 
+function getNoteNumber(noteName: string): number {
+	const note = noteName.slice(0, -1);
+	const octave = Number.parseInt(noteName.slice(-1), 10);
+	const noteIndex = NOTE_NAMES.indexOf(note);
+	if (noteIndex === -1) {
+		throw new Error(`Invalid note name: ${noteName}`);
+	}
+	return noteIndex + (octave + 1) * 12;
+}
+
 /*
     This function takes a velocity value and returns a string describing the velocity.
     The velocity is represented as an integer, with 0 being silent and 127 being the maximum velocity.
@@ -78,4 +88,10 @@ function describeVelocity(v: number) {
 	return "hard";
 }
 
-export { parseStatusByte, NOTE_NAMES, getNoteName, describeVelocity };
+export {
+	parseStatusByte,
+	NOTE_NAMES,
+	getNoteName,
+	getNoteNumber,
+	describeVelocity,
+};

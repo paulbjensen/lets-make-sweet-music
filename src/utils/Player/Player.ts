@@ -29,9 +29,14 @@ class Player {
 		return duration;
 	}
 
-	processEvent(event: { timestamp: number; type: string; key: string }) {
+	processEvent(event: {
+		timestamp: number;
+		type: string;
+		key: string;
+		velocity?: number;
+	}) {
 		if (event.type === "pressKey") {
-			this.eventEmitter.emit("pressKey", event.key);
+			this.eventEmitter.emit("pressKey", event.key, event.velocity);
 		} else if (event.type === "releaseKey") {
 			this.eventEmitter.emit("releaseKey", event.key);
 		}

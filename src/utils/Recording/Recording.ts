@@ -2,6 +2,7 @@ type RecordingEvent = {
 	timestamp: number;
 	type: "pressKey" | "releaseKey";
 	key: string;
+	velocity?: number;
 };
 
 import type { Note } from "../../types";
@@ -25,12 +26,17 @@ class Recording {
 		this.events = [];
 	}
 
-	addEvent({ type, key }: Pick<RecordingEvent, "type" | "key">) {
+	addEvent({
+		type,
+		key,
+		velocity,
+	}: Pick<RecordingEvent, "type" | "key" | "velocity">) {
 		if (this.status !== "recording") return;
 		const event: RecordingEvent = {
 			timestamp: Date.now() - (this.startedAt ?? 0),
 			type,
 			key,
+			velocity,
 		};
 		this.events.push(event);
 	}

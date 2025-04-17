@@ -33,17 +33,19 @@ import EventEmitter from "./utils/EventEmitter/EventEmitter";
     of the events we use in the application.
 */
 const typedEvents = [
-	"playTracks",
-	"playSound",
-	"playTrack",
-	"finishPlayingTrack",
-	"removeTrack",
-	"pressKey",
-	"releaseKey",
-	"finishPlayingTracks",
-	"startRecording",
-	"stopRecording",
-	"startBurning",
+	"playTracks", // Used to play all tracks in the player (effectively the song)
+	"playSound", // Plays an individual sound on the soundbox
+	"playTrack", // Used to play an individual track
+	"finishPlayingTrack", // Used to signal that a track has finished playing
+	"removeTrack", // When a track is removed from the list of tracks
+	"pressKey", // When a key is pressed on the keyboard instrument
+	"releaseKey", // When a key is released on the keyboard instrument
+	"finishPlayingTracks", // When all tracks have finished playing
+	"startRecording", // When the user starts recording a track
+	"stopRecording", // When the user stops recording a track
+	"startBurning", // When the user starts burning a track (to save to disk)
+	"playNote", // When a note is played on the keyboard instrument
+	"stopNote", // When a note is stopped on the keyboard instrument
 ];
 
 const eventEmitter = new EventEmitter({ typedEvents });

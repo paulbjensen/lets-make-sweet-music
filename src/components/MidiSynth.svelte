@@ -2,82 +2,16 @@
 // Make sure to check out the notes in MidiSynth copy.svelte for comments
 // that explain the code in more detail
 import { onMount } from "svelte";
-import roomWavFile from "../assets/rooms/room.wav";
 import {
 	describeVelocity,
 	getNoteName,
 	parseStatusByte,
 } from "../utils/MidiRecorder/midiDecoder";
 
-// const { eventEmitter } = $props();
+const { eventEmitter } = $props();
 
 let midiStatus = $state("Waiting for MIDI...");
 const midiLogs: string[] = $state([]);
-
-const audioCtx = new AudioContext();
-const activeVoices: Record<number, { osc: OscillatorNode; gain: GainNode }> =
-	{};
-
-// Optional: load a reverb impulse response
-const reverb = audioCtx.createConvolver();
-
-(async () => {
-	const response = await fetch(roomWavFile);
-	const arrayBuffer = await response.arrayBuffer();
-	const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-	reverb.buffer = audioBuffer;
-})();
-
-function midiToFreq(note: number): number {
-	return 440 * 2 ** ((note - 69) / 12);
-}
-
-function playNote(note: number, velocity: number) {
-	const now = audioCtx.currentTime;
-
-	const osc = audioCtx.createOscillator();
-	const gain = audioCtx.createGain();
-	const filter = audioCtx.createBiquadFilter();
-	filter.type = "lowpass";
-	filter.frequency.value = 1500;
-
-	// ADSR envelope
-	const attack = 0.05;
-	const decay = 0.1;
-	const sustain = 0.6;
-
-	osc.type = "triangle";
-	osc.frequency.value = midiToFreq(note);
-
-	gain.gain.setValueAtTime(0, now);
-	gain.gain.linearRampToValueAtTime(velocity / 127, now + attack);
-	gain.gain.linearRampToValueAtTime(
-		sustain * (velocity / 127),
-		now + attack + decay,
-	);
-
-	osc.connect(gain);
-	gain.connect(filter);
-	filter.connect(reverb);
-	reverb.connect(audioCtx.destination);
-
-	osc.start();
-
-	activeVoices[note] = { osc, gain };
-}
-
-function stopNote(note: number) {
-	const voice = activeVoices[note];
-	if (voice) {
-		const now = audioCtx.currentTime;
-		const release = 0.2;
-		voice.gain.gain.cancelScheduledValues(now);
-		voice.gain.gain.setValueAtTime(voice.gain.gain.value, now);
-		voice.gain.gain.linearRampToValueAtTime(0, now + release);
-		voice.osc.stop(now + release);
-		delete activeVoices[note];
-	}
-}
 
 onMount(async () => {
 	// Used for scrolling the MIDI logs container
@@ -102,14 +36,20 @@ onMount(async () => {
 		const midiAccess = await navigator.requestMIDIAccess();
 		const inputs = [...midiAccess.inputs.values()];
 
-		if (inputs.length === 0) {
-			midiStatus = "No MIDI devices found";
+		const isAvailable = (input: MIDIInput) => input.state === "connected";
+
+		const availableInputs = inputs.filter(isAvailable);
+
+		if (availableInputs.length === 0) {
+			midiStatus = "No MIDI devices available";
 			return;
 		}
 
 		midiStatus = "MIDI device connected ✅";
 
-		const input = inputs[0];
+		const input = availableInputs[0];
+		midiStatus = `MIDI device connected: ${input.name} (${input.manufacturer})`;
+
 		input.onmidimessage = (event: MIDIMessageEvent) => {
 			if (event.data) {
 				const [status, note, velocity] = event.data;
@@ -124,14 +64,12 @@ onMount(async () => {
 				const parsedCommand = status & 0xf0;
 
 				if (parsedCommand === 0x90 && velocity > 0) {
-					// eventEmitter.emit('pressKey', noteName);
-					playNote(note, velocity);
+					eventEmitter.emit("playNote", note, velocity);
 				} else if (
 					parsedCommand === 0x80 ||
 					(parsedCommand === 0x90 && velocity === 0)
 				) {
-					// eventEmitter.emit('releaseKey', noteName);
-					stopNote(note);
+					eventEmitter.emit("stopNote", note);
 				}
 			}
 		};
