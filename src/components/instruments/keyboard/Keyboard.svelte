@@ -116,6 +116,7 @@ function handleKeyDown(event: KeyboardEvent) {
 	if (note) {
 		const octaveAppliedNote = applyOctave(note);
 		if (!octaveAppliedNote) return;
+		if (isOutOfRange(octaveAppliedNote)) return;
 		pressKey(octaveAppliedNote);
 	} else if (lowercasedKey === "c") {
 		describeVelocity();
@@ -139,6 +140,7 @@ function handleKeyUp(event: KeyboardEvent) {
 	if (!note) return;
 	const octaveAppliedNote = applyOctave(note);
 	if (!octaveAppliedNote) return;
+	if (isOutOfRange(octaveAppliedNote)) return;
 	releaseKey(octaveAppliedNote);
 }
 
