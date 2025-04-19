@@ -7,6 +7,7 @@ import Timeline from "./components/Timeline.svelte";
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
 import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import eventEmitter from "./eventEmitter";
+import Burner from "./utils/Burner/Burner";
 import { getNoteNumber } from "./utils/MidiRecorder/midiDecoder";
 // Utils
 import Player from "./utils/Player/Player";
@@ -19,6 +20,8 @@ import { Oscillator } from "./utils/analysers/Oscillator";
 const midiSynthSoundBox = new MidiSynthSoundBox({
 	// roomWavFile,
 });
+
+const burner = new Burner(midiSynthSoundBox.audioContext);
 
 // Here we connect the waa soundBox to the Oscillator
 const oscillator = new Oscillator({
@@ -88,6 +91,10 @@ function stopRecording() {
 	}
 }
 
+function connectBurnerToSource() {
+	burner.connectSource(midiSynthSoundBox.getSource());
+}
+
 /*
 	NOTE
 
@@ -100,7 +107,8 @@ function stopRecording() {
 	the song to have a bit of space at the start and end of the track.
 */
 function startBurning() {
-	midiSynthSoundBox.startBurning();
+	midiSynthSoundBox.eventEmitter.on("start", connectBurnerToSource);
+	burner.startBurning();
 	eventEmitter.emit("playTracks");
 }
 
@@ -109,8 +117,9 @@ function startBurning() {
 	burn tracks onto CDs back in the day).
 */
 function stopBurning() {
-	if (midiSynthSoundBox.isBurning) {
-		midiSynthSoundBox.stopBurning();
+	if (burner.isBurning) {
+		burner.stopBurning();
+		midiSynthSoundBox.eventEmitter.off("start", connectBurnerToSource);
 	}
 }
 

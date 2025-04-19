@@ -1,23 +1,24 @@
+import EventEmitter from "../EventEmitter/EventEmitter";
+
 class MidiSynthSoundBox {
 	audioContext: AudioContext;
 	activeVoices: Record<number, { osc: OscillatorNode; gain: GainNode }>;
 	roomWavFile?: string;
 	reverb: ConvolverNode;
 	analyser?: AnalyserNode;
-	burnToCD: MediaStreamAudioDestinationNode;
-	cd?: MediaRecorder;
-	isBurning: boolean;
+	filter?: BiquadFilterNode;
+	eventEmitter: EventEmitter;
 
 	constructor({ roomWavFile }: { roomWavFile?: string }) {
 		this.audioContext = new AudioContext();
 		this.activeVoices = {};
 		this.roomWavFile = roomWavFile;
 		this.reverb = this.audioContext.createConvolver();
-		// This could be extracted to a separate thing - a burner class
-		this.burnToCD = this.audioContext.createMediaStreamDestination();
-		this.isBurning = false;
 
+		// If we have initialized with a room wav audio file, then we
+		// call load to fetch the audio file and decode it
 		if (this.roomWavFile) this.load();
+		this.eventEmitter = new EventEmitter();
 	}
 
 	load() {
@@ -42,14 +43,19 @@ class MidiSynthSoundBox {
 		return 440 * 2 ** ((note - 69) / 12);
 	}
 
+	getSource() {
+		const source = this.analyser || this.reverb || this.filter;
+		return source;
+	}
+
 	playNote(note: number, velocity: number) {
 		const now = this.audioContext.currentTime;
 
 		const osc = this.audioContext.createOscillator();
 		const gain = this.audioContext.createGain();
-		const filter = this.audioContext.createBiquadFilter();
-		filter.type = "lowpass";
-		filter.frequency.value = 1500;
+		this.filter = this.audioContext.createBiquadFilter();
+		this.filter.type = "lowpass";
+		this.filter.frequency.value = 1500;
 
 		// ADSR envelope
 		const attack = 0.05;
@@ -67,9 +73,9 @@ class MidiSynthSoundBox {
 		);
 
 		osc.connect(gain);
-		gain.connect(filter);
+		gain.connect(this.filter);
 		if (this.roomWavFile) {
-			filter.connect(this.reverb);
+			this.filter.connect(this.reverb);
 
 			if (this.analyser) {
 				this.reverb.connect(this.analyser);
@@ -79,19 +85,19 @@ class MidiSynthSoundBox {
 			}
 		} else {
 			if (this.analyser) {
-				filter.connect(this.analyser);
+				this.filter.connect(this.analyser);
 				this.analyser.connect(this.audioContext.destination);
 			} else {
-				filter.connect(this.audioContext.destination);
+				this.filter.connect(this.audioContext.destination);
 			}
 		}
 
-		// This bit might be key too
-		if (this.cd && this.isBurning) {
-			const source = this.analyser || this.reverb || filter;
-			source.connect(this.burnToCD);
-		}
+		// This is used so that just before the oscillator starts, we can
+		// do things like connect the burner to the audio context to record
+		// the sounds for putting onto a file.
+		this.eventEmitter.emit("start");
 
+		// The moment we start the oscillator
 		osc.start();
 
 		this.activeVoices[note] = { osc, gain };
@@ -108,35 +114,6 @@ class MidiSynthSoundBox {
 			voice.osc.stop(now + release);
 			delete this.activeVoices[note];
 		}
-	}
-
-	// This bit too
-	startBurning() {
-		this.isBurning = true;
-		this.cd = new MediaRecorder(this.burnToCD.stream);
-		const chunks: BlobPart[] = [];
-
-		this.cd.ondataavailable = (e) => {
-			chunks.push(e.data);
-		};
-
-		this.cd.onstop = () => {
-			const blob = new Blob(chunks, { type: "audio/ogg" });
-			const url = URL.createObjectURL(blob);
-
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = "recording.ogg";
-			a.click();
-		};
-
-		// Start recording
-		this.cd.start();
-	}
-
-	stopBurning() {
-		this.cd?.stop();
-		this.isBurning = false;
 	}
 }
 
