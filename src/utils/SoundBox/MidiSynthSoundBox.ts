@@ -8,6 +8,10 @@ class MidiSynthSoundBox {
 	analyser?: AnalyserNode;
 	filter?: BiquadFilterNode;
 	eventEmitter: EventEmitter;
+	attack: number;
+	decay: number;
+	sustain: number;
+	release: number;
 
 	constructor({ roomWavFile }: { roomWavFile?: string }) {
 		this.audioContext = new AudioContext();
@@ -19,6 +23,12 @@ class MidiSynthSoundBox {
 		// call load to fetch the audio file and decode it
 		if (this.roomWavFile) this.load();
 		this.eventEmitter = new EventEmitter();
+
+		// ADSR envelope
+		this.attack = 0.05;
+		this.decay = 0.1;
+		this.sustain = 0.6;
+		this.release = 0.2;
 	}
 
 	load() {
@@ -57,19 +67,14 @@ class MidiSynthSoundBox {
 		this.filter.type = "lowpass";
 		this.filter.frequency.value = 1500;
 
-		// ADSR envelope
-		const attack = 0.05;
-		const decay = 0.1;
-		const sustain = 0.6;
-
 		osc.type = "triangle";
 		osc.frequency.value = this.midiToFreq(note);
 
 		gain.gain.setValueAtTime(0, now);
-		gain.gain.linearRampToValueAtTime(velocity / 127, now + attack);
+		gain.gain.linearRampToValueAtTime(velocity / 127, now + this.attack);
 		gain.gain.linearRampToValueAtTime(
-			sustain * (velocity / 127),
-			now + attack + decay,
+			this.sustain * (velocity / 127),
+			now + this.attack + this.decay,
 		);
 
 		osc.connect(gain);
@@ -107,11 +112,10 @@ class MidiSynthSoundBox {
 		const voice = this.activeVoices[note];
 		if (voice) {
 			const now = this.audioContext.currentTime;
-			const release = 0.2;
 			voice.gain.gain.cancelScheduledValues(now);
 			voice.gain.gain.setValueAtTime(voice.gain.gain.value, now);
-			voice.gain.gain.linearRampToValueAtTime(0, now + release);
-			voice.osc.stop(now + release);
+			voice.gain.gain.linearRampToValueAtTime(0, now + this.release);
+			voice.osc.stop(now + this.release);
 			delete this.activeVoices[note];
 		}
 	}

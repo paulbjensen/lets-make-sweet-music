@@ -2,6 +2,7 @@
 // Dependencies
 import { onDestroy, onMount } from "svelte";
 
+import ADSRSettings from "./components/ADSRSettings.svelte";
 // UI Components
 import Timeline from "./components/Timeline.svelte";
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
@@ -15,6 +16,13 @@ import Recording from "./utils/Recording/Recording";
 // import MidiSynth from "./components/MidiSynth.svelte";
 import MidiSynthSoundBox from "./utils/SoundBox/MidiSynthSoundBox";
 import { Oscillator } from "./utils/analysers/Oscillator";
+
+type ADSR = {
+	attack: number;
+	decay: number;
+	sustain: number;
+	release: number;
+};
 
 // import roomWavFile from "./assets/rooms/room.wav";
 const midiSynthSoundBox = new MidiSynthSoundBox({
@@ -95,6 +103,13 @@ function connectBurnerToSource() {
 	burner.connectSource(midiSynthSoundBox.getSource());
 }
 
+function updateADSR(settings: ADSR) {
+	midiSynthSoundBox.attack = settings.attack;
+	midiSynthSoundBox.decay = settings.decay;
+	midiSynthSoundBox.sustain = settings.sustain;
+	midiSynthSoundBox.release = settings.release;
+}
+
 /*
 	NOTE
 
@@ -151,6 +166,8 @@ onMount(async () => {
 
 	eventEmitter.on("startBurning", startBurning);
 	eventEmitter.on("finishPlayingTracks", stopBurning);
+
+	eventEmitter.on("updateADSR", (settings) => updateADSR(settings as ADSR));
 });
 
 onDestroy(() => {
@@ -173,6 +190,8 @@ onDestroy(() => {
 
 	eventEmitter.off("startBurning", startBurning);
 	eventEmitter.off("finishPlayingTracks", stopBurning);
+
+	eventEmitter.off("updateADSR", (settings) => updateADSR(settings as ADSR));
 });
 </script>
 
@@ -197,4 +216,12 @@ onDestroy(() => {
 <main>
   <Timeline {tracks} {eventEmitter} />
   <Keyboard {eventEmitter} />
+  <ADSRSettings {eventEmitter} defaultSettings={
+	{
+	  attack: midiSynthSoundBox.attack,
+	  decay: midiSynthSoundBox.decay,
+	  sustain: midiSynthSoundBox.sustain,
+	  release: midiSynthSoundBox.release,
+	}
+  } /> 
 </main>

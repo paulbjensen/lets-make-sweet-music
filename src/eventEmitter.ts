@@ -46,6 +46,7 @@ const typedEvents = [
 	"startBurning", // When the user starts burning a track (to save to disk)
 	"playNote", // When a note is played on the keyboard instrument
 	"stopNote", // When a note is stopped on the keyboard instrument
+	"updateADSR", // When the user updates the ADSR settings on the synthesizer
 ];
 
 const eventEmitter = new EventEmitter({ typedEvents });

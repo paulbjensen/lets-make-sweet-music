@@ -1,4 +1,4 @@
-class MidiSynthSoundBox {
+class Burner {
 	burnToCD: MediaStreamAudioDestinationNode;
 	cd?: MediaRecorder;
 	isBurning: boolean;
@@ -8,14 +8,12 @@ class MidiSynthSoundBox {
 		this.isBurning = false;
 	}
 
-	// We use this
 	connectSource(source: AudioNode) {
 		if (this.cd && this.isBurning) {
 			source.connect(this.burnToCD);
 		}
 	}
 
-	// This bit too
 	startBurning() {
 		this.isBurning = true;
 		this.cd = new MediaRecorder(this.burnToCD.stream);
@@ -46,4 +44,4 @@ class MidiSynthSoundBox {
 	}
 }
 
-export default MidiSynthSoundBox;
+export default Burner;
