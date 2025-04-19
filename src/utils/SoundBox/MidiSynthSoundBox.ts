@@ -74,10 +74,10 @@ class MidiSynthSoundBox {
 
 		// Filter settings
 		this.filter.type = this.filterType;
-		this.filter.frequency.value = 1500;
+		this.filter.frequency.value = this.filterFrequency;
 
 		// Oscillator settings
-		osc.type = "triangle";
+		osc.type = this.oscillatorType;
 		osc.frequency.value = this.midiToFreq(note);
 
 		gain.gain.setValueAtTime(0, now);
