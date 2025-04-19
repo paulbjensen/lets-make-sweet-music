@@ -12,3 +12,16 @@ export type Note = {
 	pressedAt: number;
 	releasedAt: number | null;
 };
+
+export type ADSR = {
+	attack: number;
+	decay: number;
+	sustain: number;
+	release: number;
+};
+
+export type FilterAndOscillator = {
+	filterType: BiquadFilterType;
+	oscillatorType: OscillatorType;
+	filterFrequency: number;
+};

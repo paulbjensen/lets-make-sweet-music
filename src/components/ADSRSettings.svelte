@@ -38,24 +38,41 @@ function updateADSR() {
 	text-transform: uppercase;
 	text-align: center;
   }
+
+    .control-group {
+        display: flex;
+    }
+
+    label {
+        min-width: 150px;
+    }
+  
 </style>
 
  <form onchange={updateADSR}>
 	<div class="form-header">ADSR Envelope settings</div>
-	<label>
-	  Attack:
-	  <input type="range" min="0" max="1" step="0.01" bind:value={attack} />
-	</label>
-	<label>
-	  Decay:
-	  <input type="range" min="0" max="1" step="0.01" bind:value={decay} />
-	</label>
-	<label>
-	  Sustain:
-	  <input type="range" min="0" max="1" step="0.01" bind:value={sustain} />
-	</label>
-	<label>
-	  Release:
-	  <input type="range" min="0" max="1" step="0.01" bind:value={release} />
-	</label>
+    <div class="control-group">
+        <label for="attack">
+            Attack:
+        </label>
+        <input name="attack" type="range" min="0" max="1" step="0.01" bind:value={attack} />
+    </div>    
+    <div class="control-group">
+        <label for="decay">
+        Decay:
+        </label>
+        <input name="decay" type="range" min="0" max="1" step="0.01" bind:value={decay} />
+    </div>    
+    <div class="control-group">
+      <label for="sustain">
+        Sustain:
+      </label>
+	  <input name="sustain" type="range" min="0" max="1" step="0.01" bind:value={sustain} />
+    </div>    
+    <div class="control-group">
+	  <label for="release">
+	    Release:
+	  </label>
+	  <input name="release" type="range" min="0" max="1" step="0.01" bind:value={release} />
+    </div>    
   </form>

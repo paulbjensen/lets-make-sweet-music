@@ -3,11 +3,13 @@
 import { onDestroy, onMount } from "svelte";
 
 import ADSRSettings from "./components/ADSRSettings.svelte";
+import FilterAndOscillatorSettings from "./components/FilterAndOscillatorSettings.svelte";
 // UI Components
 import Timeline from "./components/Timeline.svelte";
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
 import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import eventEmitter from "./eventEmitter";
+import type { ADSR, FilterAndOscillator } from "./types";
 import Burner from "./utils/Burner/Burner";
 import { getNoteNumber } from "./utils/MidiRecorder/midiDecoder";
 // Utils
@@ -16,13 +18,6 @@ import Recording from "./utils/Recording/Recording";
 // import MidiSynth from "./components/MidiSynth.svelte";
 import MidiSynthSoundBox from "./utils/SoundBox/MidiSynthSoundBox";
 import { Oscillator } from "./utils/analysers/Oscillator";
-
-type ADSR = {
-	attack: number;
-	decay: number;
-	sustain: number;
-	release: number;
-};
 
 // import roomWavFile from "./assets/rooms/room.wav";
 const midiSynthSoundBox = new MidiSynthSoundBox({
@@ -110,6 +105,12 @@ function updateADSR(settings: ADSR) {
 	midiSynthSoundBox.release = settings.release;
 }
 
+function updateFilterAndOscillator(settings: FilterAndOscillator) {
+	midiSynthSoundBox.filterType = settings.filterType;
+	midiSynthSoundBox.oscillatorType = settings.oscillatorType;
+	midiSynthSoundBox.filterFrequency = settings.filterFrequency;
+}
+
 /*
 	NOTE
 
@@ -168,6 +169,9 @@ onMount(async () => {
 	eventEmitter.on("finishPlayingTracks", stopBurning);
 
 	eventEmitter.on("updateADSR", (settings) => updateADSR(settings as ADSR));
+	eventEmitter.on("updateFilterAndOscillator", (settings) =>
+		updateFilterAndOscillator(settings as FilterAndOscillator),
+	);
 });
 
 onDestroy(() => {
@@ -192,6 +196,9 @@ onDestroy(() => {
 	eventEmitter.off("finishPlayingTracks", stopBurning);
 
 	eventEmitter.off("updateADSR", (settings) => updateADSR(settings as ADSR));
+	eventEmitter.off("updateFilterAndOscillator", (settings) =>
+		updateFilterAndOscillator(settings as FilterAndOscillator),
+	);
 });
 </script>
 
@@ -223,5 +230,12 @@ onDestroy(() => {
 	  sustain: midiSynthSoundBox.sustain,
 	  release: midiSynthSoundBox.release,
 	}
-  } /> 
+  } />
+  <FilterAndOscillatorSettings {eventEmitter} defaultSettings={
+	{
+	  filterType: midiSynthSoundBox.filterType,
+	  oscillatorType: midiSynthSoundBox.oscillatorType,
+	  filterFrequency: midiSynthSoundBox.filterFrequency,
+	}
+  } />
 </main>

@@ -12,6 +12,9 @@ class MidiSynthSoundBox {
 	decay: number;
 	sustain: number;
 	release: number;
+	filterType: BiquadFilterType;
+	oscillatorType: OscillatorType;
+	filterFrequency: number;
 
 	constructor({ roomWavFile }: { roomWavFile?: string }) {
 		this.audioContext = new AudioContext();
@@ -25,10 +28,14 @@ class MidiSynthSoundBox {
 		this.eventEmitter = new EventEmitter();
 
 		// ADSR envelope
+		// NOTE - as some point it might be nice to pass these in as parameters, say we have predefined values for sounding like a piano, or a flute, or a trumpet
 		this.attack = 0.05;
 		this.decay = 0.1;
 		this.sustain = 0.6;
 		this.release = 0.2;
+		this.filterType = "lowpass";
+		this.oscillatorType = "triangle";
+		this.filterFrequency = 1500;
 	}
 
 	load() {
@@ -64,9 +71,12 @@ class MidiSynthSoundBox {
 		const osc = this.audioContext.createOscillator();
 		const gain = this.audioContext.createGain();
 		this.filter = this.audioContext.createBiquadFilter();
-		this.filter.type = "lowpass";
+
+		// Filter settings
+		this.filter.type = this.filterType;
 		this.filter.frequency.value = 1500;
 
+		// Oscillator settings
 		osc.type = "triangle";
 		osc.frequency.value = this.midiToFreq(note);
 
