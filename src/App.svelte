@@ -4,6 +4,7 @@ import { onDestroy, onMount } from "svelte";
 
 import ADSRSettings from "./components/ADSRSettings.svelte";
 import FilterAndOscillatorSettings from "./components/FilterAndOscillatorSettings.svelte";
+import MidiSynth from "./components/MidiSynth.svelte";
 // UI Components
 import Timeline from "./components/Timeline.svelte";
 import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
@@ -99,10 +100,10 @@ function connectBurnerToSource() {
 }
 
 function updateADSR(settings: ADSR) {
-	midiSynthSoundBox.attack = settings.attack;
-	midiSynthSoundBox.decay = settings.decay;
-	midiSynthSoundBox.sustain = settings.sustain;
-	midiSynthSoundBox.release = settings.release;
+	if (settings.attack) midiSynthSoundBox.attack = settings.attack;
+	if (settings.decay) midiSynthSoundBox.decay = settings.decay;
+	if (settings.sustain) midiSynthSoundBox.sustain = settings.sustain;
+	if (settings.release) midiSynthSoundBox.release = settings.release;
 }
 
 function updateFilterAndOscillator(settings: FilterAndOscillator) {
@@ -238,4 +239,5 @@ onDestroy(() => {
 	  filterFrequency: midiSynthSoundBox.filterFrequency,
 	}
   } />
+  <MidiSynth {eventEmitter} />
 </main>

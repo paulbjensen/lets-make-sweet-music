@@ -1,4 +1,8 @@
-import EventEmitter from "../EventEmitter/EventEmitter";
+import EventEmitter from "@anephenix/event-emitter";
+
+type EventMap = {
+	start: () => void;
+};
 
 class MidiSynthSoundBox {
 	audioContext: AudioContext;
@@ -7,7 +11,7 @@ class MidiSynthSoundBox {
 	reverb: ConvolverNode;
 	analyser?: AnalyserNode;
 	filter?: BiquadFilterNode;
-	eventEmitter: EventEmitter;
+	eventEmitter: EventEmitter<EventMap>;
 	attack: number;
 	decay: number;
 	sustain: number;

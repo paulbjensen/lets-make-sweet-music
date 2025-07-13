@@ -13,6 +13,16 @@ const { eventEmitter } = $props();
 let midiStatus = $state("Waiting for MIDI...");
 const midiLogs: string[] = $state([]);
 
+const getADSRAttributeFromNote = (noteName: string) => {
+	const attributes = {
+		"A#5": "attack",
+		B5: "decay",
+		"C#6": "sustain",
+		F0: "release",
+	};
+	return attributes[noteName as keyof typeof attributes];
+};
+
 onMount(async () => {
 	// Used for scrolling the MIDI logs container
 	// to the bottom when new logs are added
@@ -59,6 +69,18 @@ onMount(async () => {
 				const velocityLabel = describeVelocity(velocity);
 
 				const logItem = `${command} ${noteName} on channel ${channel} at velocity ${velocity} (${velocityLabel})`;
+
+				// If one of the mixer dials is changed, update the synth ADSR settings
+				if (command === "control change") {
+					// This can be moved into another location
+					const attribute = getADSRAttributeFromNote(noteName);
+					if (attribute) {
+						eventEmitter.emit("updateADSRFromKeyboard", {
+							[attribute]: velocity / 127,
+						});
+					}
+				}
+
 				midiLogs.push(logItem);
 
 				const parsedCommand = status & 0xf0;

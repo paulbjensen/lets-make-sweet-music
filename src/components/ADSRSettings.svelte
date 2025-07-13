@@ -1,14 +1,12 @@
 <script lang="ts">
+import { onMount } from "svelte";
+
 const { defaultSettings, eventEmitter } = $props();
 
 // ADSR values to be used for the synth
-// biome-ignore lint/style/useConst: Set by the input bindings
 let attack = $state(defaultSettings.attack);
-// biome-ignore lint/style/useConst: Set by the input bindings
 let decay = $state(defaultSettings.decay);
-// biome-ignore lint/style/useConst: Set by the input bindings
 let sustain = $state(defaultSettings.sustain);
-// biome-ignore lint/style/useConst: Set by the input bindings
 let release = $state(defaultSettings.release);
 
 function updateADSR() {
@@ -19,6 +17,38 @@ function updateADSR() {
 		release,
 	});
 }
+
+type SettingsProps = {
+	attack?: number | undefined;
+	decay?: number | undefined;
+	sustain?: number | undefined;
+	release?: number | undefined;
+};
+
+/*
+  If a keyboard event is received with a value for a setting, update the envelope settings
+*/
+function applyUpdatesToEnvelope(settings: SettingsProps) {
+	if (settings?.attack !== undefined) {
+		attack = settings.attack;
+	}
+	if (settings?.decay !== undefined) {
+		decay = settings.decay;
+	}
+	if (settings?.sustain !== undefined) {
+		sustain = settings.sustain;
+	}
+	if (settings?.release !== undefined) {
+		release = settings.release;
+	}
+}
+
+onMount(() => {
+	eventEmitter.on("updateADSRFromKeyboard", (settings: SettingsProps) => {
+		applyUpdatesToEnvelope(settings);
+		updateADSR();
+	});
+});
 </script>
 
 <style>
