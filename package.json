@@ -27,6 +27,6 @@
 	"dependencies": {
 		"@anephenix/event-emitter": "^0.0.7",
 		"@sentry/svelte": "^9.11.0",
-		"@sentry/vite-plugin": "^3.3.1"
+		"@sentry/vite-plugin": "^3.6.0"
 	}
 }
