@@ -13,21 +13,21 @@ function parseStatusByte(byte: number) {
 	const channel = (byte & 0x0f) + 1;
 
 	const commands: Record<number, string> = {
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0x80: "noteoff",
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0x90: "noteon",
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0xa0: "poly aftertouch",
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0xb0: "control change",
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0xc0: "program change",
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0xd0: "channel aftertouch",
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0xe0: "pitch bend",
-		// biome-ignore lint/complexity/useSimpleNumberKeys: <explanation>
+		// biome-ignore lint/complexity/useSimpleNumberKeys: Using Hexadecimal for MIDI command types
 		0xf0: "system",
 	};
 
