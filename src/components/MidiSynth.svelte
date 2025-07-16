@@ -6,7 +6,7 @@ import {
 	describeVelocity,
 	getNoteName,
 	parseStatusByte,
-} from "../utils/MidiRecorder/midiDecoder";
+} from "../utils/midiDecoder/midiDecoder";
 
 const { eventEmitter } = $props();
 

@@ -13,7 +13,7 @@ import eventEmitter from "./eventEmitter";
 import type { ADSR, FilterAndOscillator } from "./types";
 import { Oscillator } from "./utils/analysers/Oscillator";
 import Burner from "./utils/Burner/Burner";
-import { getNoteNumber } from "./utils/MidiRecorder/midiDecoder";
+import { getNoteNumber } from "./utils/midiDecoder/midiDecoder";
 // Utils
 import Player from "./utils/Player/Player";
 import Recording from "./utils/Recording/Recording";
