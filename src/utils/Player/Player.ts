@@ -1,14 +1,15 @@
-import type EventEmitter from "../EventEmitter/EventEmitter";
+import type EventEmitter from "@anephenix/event-emitter";
+import type { EventMap } from "@anephenix/event-emitter";
 import type Recording from "../Recording/Recording";
 
 interface PlayerOptions {
 	tracks: Recording[];
-	eventEmitter: EventEmitter;
+	eventEmitter: EventEmitter<EventMap>;
 }
 
 class Player {
 	tracks: Recording[];
-	eventEmitter: EventEmitter;
+	eventEmitter: EventEmitter<EventMap>;
 
 	constructor({ tracks, eventEmitter }: PlayerOptions) {
 		this.tracks = tracks || [];
@@ -24,9 +25,21 @@ class Player {
 	}
 
 	calculateSongDuration() {
-		const durations = this.tracks.map(this.calculateTrackDuration);
-		const duration = Math.max(...durations);
-		return duration;
+		const startTimes = this.tracks
+			.map((track) => track.startedAt)
+			.filter((start) => start !== null) as number[];
+		const endTimes = this.tracks
+			.map((track) => track.endedAt)
+			.filter((end) => end !== null) as number[];
+
+		if (startTimes.length === 0 || endTimes.length === 0) {
+			return 0; // No valid tracks to calculate duration
+		}
+
+		const earliestStart = Math.min(...startTimes);
+		const latestEnd = Math.max(...endTimes);
+		const duration = latestEnd - earliestStart;
+		return duration > 0 ? duration : 0; // Ensure non-negative duration
 	}
 
 	processEvent(event: {

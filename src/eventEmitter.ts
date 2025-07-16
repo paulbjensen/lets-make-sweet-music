@@ -1,6 +1,7 @@
 import EventEmitter from "@anephenix/event-emitter";
+import type { EventMap } from "@anephenix/event-emitter";
 
-type EventMap = {
+type LMSMEventMap = EventMap & {
 	playTracks: (tracks: string[]) => void; // Used to play all tracks in the player (effectively the song)
 	playSound: (sound: string) => void; // Plays an individual sound on the soundbox
 	playTrack: (track: string) => void; // Used to play an individual track
@@ -29,7 +30,7 @@ type EventMap = {
 	}) => void; // This will update the ADSR settings from a MIDI-connected keyboard
 };
 
-const eventEmitter = new EventEmitter<EventMap>();
+const eventEmitter = new EventEmitter<LMSMEventMap>();
 
 // Set this flag to true to enable logging
 // eventEmitter.enableLogging = true;

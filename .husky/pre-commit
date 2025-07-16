@@ -1,5 +1,5 @@
 npm run format
 npm run lint
-#npm run test - Comment out for now as there are currently no unit tests
+npm run test
 # Restage any files that were changed by biome and already staged
 git diff --name-only --diff-filter=ACM | grep . | xargs git add
