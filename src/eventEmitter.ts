@@ -1,5 +1,5 @@
-import EventEmitter from "@anephenix/event-emitter";
 import type { EventMap } from "@anephenix/event-emitter";
+import EventEmitter from "@anephenix/event-emitter";
 
 type LMSMEventMap = EventMap & {
 	playTracks: (tracks: string[]) => void; // Used to play all tracks in the player (effectively the song)

@@ -1,6 +1,7 @@
 
 <script lang="ts">
 const { analyser, dataArray, bufferLength } = $props();
+
 import { onMount } from "svelte";
 
 let canvas: HTMLCanvasElement | null = null;

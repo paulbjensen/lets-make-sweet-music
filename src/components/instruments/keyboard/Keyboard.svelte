@@ -1,6 +1,8 @@
 <script lang="ts">
 import { onDestroy, onMount } from "svelte";
+
 const { eventEmitter } = $props();
+
 import type { Key, KeyType } from "../../../types";
 import KeyboardKey from "./KeyboardKey.svelte";
 

@@ -1,5 +1,3 @@
-import { fetchWithRetry } from "../fetchWithRetry";
-
 export class SoundBox {
 	audioContext: AudioContext;
 	soundBuffers: Record<string, AudioBuffer>;
@@ -18,19 +16,6 @@ export class SoundBox {
 		// This could be extracted to a separate thing - a burner class
 		this.burnToCD = this.audioContext.createMediaStreamDestination();
 		this.isBurning = false;
-	}
-
-	async loadSounds() {
-		const entries = Object.entries(this.keyToFile);
-		await Promise.all(
-			entries.map(async ([key, src]) => {
-				const response = await fetchWithRetry(src);
-				const arrayBuffer = await response.arrayBuffer();
-				const audioBuffer =
-					await this.audioContext.decodeAudioData(arrayBuffer);
-				this.soundBuffers[key] = audioBuffer;
-			}),
-		);
 	}
 
 	playSound(key: string) {

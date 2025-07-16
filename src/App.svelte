@@ -4,13 +4,14 @@ import { onDestroy, onMount } from "svelte";
 
 import ADSRSettings from "./components/ADSRSettings.svelte";
 import FilterAndOscillatorSettings from "./components/FilterAndOscillatorSettings.svelte";
+import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
 import MidiSynth from "./components/MidiSynth.svelte";
+import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 // UI Components
 import Timeline from "./components/Timeline.svelte";
-import Keyboard from "./components/instruments/keyboard/Keyboard.svelte";
-import NavigationBar from "./components/navigation-bar/NavigationBar.svelte";
 import eventEmitter from "./eventEmitter";
 import type { ADSR, FilterAndOscillator } from "./types";
+import { Oscillator } from "./utils/analysers/Oscillator";
 import Burner from "./utils/Burner/Burner";
 import { getNoteNumber } from "./utils/MidiRecorder/midiDecoder";
 // Utils
@@ -18,7 +19,6 @@ import Player from "./utils/Player/Player";
 import Recording from "./utils/Recording/Recording";
 // import MidiSynth from "./components/MidiSynth.svelte";
 import MidiSynthSoundBox from "./utils/SoundBox/MidiSynthSoundBox";
-import { Oscillator } from "./utils/analysers/Oscillator";
 
 // import roomWavFile from "./assets/rooms/room.wav";
 const midiSynthSoundBox = new MidiSynthSoundBox({

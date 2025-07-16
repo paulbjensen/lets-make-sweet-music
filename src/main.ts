@@ -1,8 +1,9 @@
 import { mount } from "svelte";
 import "./app.css";
-import App from "./App.svelte";
 
 import * as Sentry from "@sentry/svelte";
+import App from "./App.svelte";
+
 const environment = import.meta.env.VITE_ENV;
 
 // Initialize Sentry

@@ -1,6 +1,8 @@
 <script lang="ts">
 import { onDestroy, onMount } from "svelte";
+
 const { tracks, eventEmitter } = $props();
+
 import Track from "./Track.svelte";
 
 const initialMarkerPosition = 75;

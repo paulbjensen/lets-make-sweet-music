@@ -1,5 +1,6 @@
 <script lang="ts">
 import { onDestroy, onMount } from "svelte";
+
 /*
         This is the navigation bar component that will contain the following:
 
@@ -11,13 +12,13 @@ import { onDestroy, onMount } from "svelte";
         A way to see the current position in the timeline (both seconds and bars/beats) 
     */
 
+import DownloadButton from "../buttons/DownloadButton.svelte";
+import PlaybackButton from "../buttons/PlaybackButton.svelte";
+import RecordButton from "../buttons/RecordButton.svelte";
 import Logo from "../Logo.svelte";
 import Oscilloscope from "../Oscilloscope.svelte";
 import RecordingSign from "../RecordingSign.svelte";
 import Timer from "../Timer.svelte";
-import DownloadButton from "../buttons/DownloadButton.svelte";
-import PlaybackButton from "../buttons/PlaybackButton.svelte";
-import RecordButton from "../buttons/RecordButton.svelte";
 
 /*
     NOTE - This is a bit of horrible props drilling that I will get around to removing later,
